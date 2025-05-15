@@ -1,0 +1,27 @@
+TODO:
+
+-clean up
+
+
+------------------------------- Controller Layouts --------------------------------------
+
+Driver:
+
+A:
+B:
+X:
+Y:
+
+Left Bumper:
+Right Bumper:
+
+Left Trigger:
+Right Trigger:
+
+Back Button:
+Start Button:
+
+Left Stick:
+Right Stick:
+
+D-Pad:
