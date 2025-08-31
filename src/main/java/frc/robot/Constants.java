@@ -310,36 +310,11 @@ public class Constants {
 
     public static final double Tolerance = 0.01;
 
-    public static final Pose2d Error = new Pose2d(6, 6, Rotation2d.fromDegrees(0));
-
-    public static final Pose2d Ablue = new Pose2d(3.180, 4.175, Rotation2d.fromDegrees(0));
-    public static final Pose2d Bblue = new Pose2d(3.180, 3.850, Rotation2d.fromDegrees(0));
-    public static final Pose2d Cblue = new Pose2d(3.685, 2.975, Rotation2d.fromDegrees(60));
-    public static final Pose2d Dblue = new Pose2d(3.975, 2.825, Rotation2d.fromDegrees(60));
-    public static final Pose2d Eblue = new Pose2d(5.000, 2.825, Rotation2d.fromDegrees(120));
-    public static final Pose2d Fblue = new Pose2d(5.285, 2.975, Rotation2d.fromDegrees(120));
-    public static final Pose2d Gblue = new Pose2d(5.8, 3.850, Rotation2d.fromDegrees(180));
-    public static final Pose2d Hblue = new Pose2d(5.8, 4.175, Rotation2d.fromDegrees(180));
-    public static final Pose2d Iblue = new Pose2d(5.285, 5.075, Rotation2d.fromDegrees(240));
-    public static final Pose2d Jblue = new Pose2d(5.000, 5.230, Rotation2d.fromDegrees(240));
-    public static final Pose2d Kblue = new Pose2d(3.975, 5.230, Rotation2d.fromDegrees(300));
-    public static final Pose2d Lblue = new Pose2d(3.685, 5.075, Rotation2d.fromDegrees(300));
-
     public static final double feildFlip = 17.5;
     public static final double feildFlipy = 8;
 
-    public static final Pose2d Ared = new Pose2d(feildFlip - 3.180, feildFlipy - 4.175, Rotation2d.fromDegrees(180));
-    public static final Pose2d Bred = new Pose2d(feildFlip - 3.180, feildFlipy - 3.850, Rotation2d.fromDegrees(180));
-    public static final Pose2d Cred = new Pose2d(feildFlip - 3.685, feildFlipy - 2.975, Rotation2d.fromDegrees(-120));
-    public static final Pose2d Dred = new Pose2d(feildFlip - 3.975, feildFlipy - 2.825, Rotation2d.fromDegrees(-120));
-    public static final Pose2d Ered = new Pose2d(feildFlip - 5.000, feildFlipy - 2.825, Rotation2d.fromDegrees(-60));
-    public static final Pose2d Fred = new Pose2d(feildFlip - 5.285, feildFlipy - 2.975, Rotation2d.fromDegrees(-60));
-    public static final Pose2d Gred = new Pose2d(feildFlip - 5.8, feildFlipy - 3.850, Rotation2d.fromDegrees(0));
-    public static final Pose2d Hred = new Pose2d(feildFlip - 5.8, feildFlipy - 4.175, Rotation2d.fromDegrees(0));
-    public static final Pose2d Ired = new Pose2d(feildFlip - 5.285, feildFlipy - 5.075, Rotation2d.fromDegrees(-300));
-    public static final Pose2d Jred = new Pose2d(feildFlip - 5.000, feildFlipy - 5.230, Rotation2d.fromDegrees(-300));
-    public static final Pose2d Kred = new Pose2d(feildFlip - 3.975, feildFlipy - 5.230, Rotation2d.fromDegrees(-240));
-    public static final Pose2d Lred = new Pose2d(feildFlip - 3.685, feildFlipy - 5.075, Rotation2d.fromDegrees(-240));
+    public static final Pose2d Error = new Pose2d(6, 6, Rotation2d.fromDegrees(0));
+
 
 
 
@@ -368,11 +343,6 @@ public class Constants {
     public static final double ArmRollerX = Units.inchesToMeters(8.0);
     public static final double ArmRollerY = Units.inchesToMeters(0);
 
-    public static final double climberBaseX = xOffset + Units.inchesToMeters(10.0);
-    public static final double climberBaseY = Units.inchesToMeters(3.0);
-    public static final Rotation2d climberAngle = Rotation2d.fromDegrees(130.0);
-    public static final double climberBaseLength = Units.inchesToMeters(15.0);
-    public static final double climberCarriageLength = Units.inchesToMeters(6.0);
     
 
     public static final double angularVelocityScalar = 0.01;
@@ -447,40 +417,6 @@ public class Constants {
     public static final double simRollerMOI = 0.01; // kgMetersSquared
   }
 
-  public static final class Climber {
-    public static final CANDeviceID motorID = new CANDeviceID(40, kSuperStructureCanivoreName);
-    public static final CANDeviceID followerID = new CANDeviceID(41, kSuperStructureCanivoreName);
-    public static final double StatorLimit = 80.0;
-    public static final double SupplyLimit = 40.0;
-    public static final double sprocketPitchDiameter = Units.inchesToMeters(2); 
-    public static final MechanismRatio motorRatio =
-        new MechanismRatio(
-            1, (200.0 / 1.0), Math.PI * sprocketPitchDiameter); // Sim
-        // new MechanismRatio(
-            // 1, (135.0 / 1.0), Math.PI * sprocketPitchDiameter); // Real
-    public static final boolean motorInvert = false;
-    public static final boolean followerInvert = true;
-    public static final int motorPositionSlot = 0;
-    public static final PIDConfig motorPIDConfig = new PIDConfig(3, 0, 0.1, 0, 0.12, 0, 0.4,GravityTypeValue.Elevator_Static);
-    public static final double maxVelocity = 0.04; // m/s
-    public static final double maxAcceleration = 30.0; // m/s^2
-    public static final double maxJerk = 0.0; // m/s^3 (0 disables jerk limit)
-
-    // TODO: use real numbers
-    public static final double minHeight = Units.inchesToMeters(-25.0); // m
-    //public static final double powerCutoffHeight = Units.inchesToMeters(0.1); // m
-    public static final double maxHeight = Units.inchesToMeters(25.0); // m
-    public static final double stowHeight = Units.inchesToMeters(0); // m
-    public static final double upperStowHeight = Units.inchesToMeters(-8.1); // m //-1.3141   -8.2623
-    public static final double climbHeight = Units.inchesToMeters(1.1); // m
-    public static final double stowTolerance = Units.inchesToMeters(0.01); // m
-
-    // For simulation.
-    public static final double simCarriageMass = 25.0; // kg
-
-    // TODO: find real values
-    public static final ElevatorFeedforward elevatorFeedforward =
-        new ElevatorFeedforward(0.35, 0.15, 15.8);
-  }
+  
 
 }

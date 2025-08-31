@@ -54,10 +54,7 @@ import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.Moveup;
 import frc.robot.commands.MoveupArm;
 import frc.robot.commands.StowArm;
-import frc.robot.Constants.Climber;
 import frc.robot.commands.AlgeaWack;
-import frc.robot.commands.ClimbSet;
-import frc.robot.commands.ClimbZero;
 import frc.robot.commands.CoralEleUp;
 import frc.robot.commands.CoralMoveScore;
 import frc.robot.commands.CoralMoveStow;
@@ -68,7 +65,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.commands.AutoPilotTest;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -294,7 +291,8 @@ ArmWristViz.addLink(
        // driver.leftTrigger().whileTrue(new IntakeAlgae(intake, 0));
         driver.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         
-        
+        driver.y().whileTrue(
+            new AutoPilotTest(drivetrain, new Pose2d(2, 2, Rotation2d.k180deg), Rotation2d.kZero));
 
         // driver.y().whileTrue(drivetrain.applyRequest(() ->
         //     angle.withVelocityX(-driver.getLeftY() * MaxSpeed)
@@ -324,6 +322,7 @@ ArmWristViz.addLink(
        driver.b().whileTrue(new MoveupArm(2,elevator,arm)); 
        driver.y().whileTrue(new Moveup(elevator));
       driver.x().whileTrue(new AlgeaWack(elevator, arm));
+      driver.leftTrigger().whileTrue(new AlgeaWack(elevator, arm));
 
        operator.y().whileTrue(new CoralEleUp(elevator));
        operator.a().whileTrue(new AlgeaWack(elevator, arm));
@@ -412,7 +411,7 @@ ArmWristViz.addLink(
             @Override
             public void initialize() {
                 m_ally = DriverStation.getAlliance();
-                targetPose = getTargetPose(left);
+                // targetPose = getTargetPose(left);
                 if (drivetrain.getLineup()){
                     xController.reset();
                     yController.reset();
@@ -468,102 +467,7 @@ ArmWristViz.addLink(
         };
     }
 
-    private Pose2d getTargetPose(boolean left) {
-        Pose2d currentPose = drivetrain.getState().Pose;
-        ChassisSpeeds currentSpeeds = drivetrain.getState().Speeds;
-        X = currentPose.getTranslation().getX() + currentSpeeds.vxMetersPerSecond * Constants.Pose.XvelocityFactor;
-        Y = currentPose.getTranslation().getY() + currentSpeeds.vyMetersPerSecond * Constants.Pose.YvelocityFactor;
-        System.out.println(X);
-        System.out.println(Y);
-        
-        if(m_ally.get() == Alliance.Blue){ 
-
-            if (Y <= -X*slope + intercpet+4 && Y >= X*slope - intercpet+4 && left && X <= 4.5) {
-            System.out.println("Ablue");
-            return Constants.Pose.Ablue;
-            } else if (Y <= -X*slope + intercpet+4 && Y >= X*slope - intercpet+4 && !left && X <= 4.5) {
-            System.out.println("Bblue");
-            return Constants.Pose.Bblue;
-            } else if (Y <= X*slope - intercpet+4 && X <= 4.5 && left) {
-            System.out.println("Cblue");
-            return Constants.Pose.Cblue;
-            } else if (Y <= X*slope - intercpet+4 && X <= 4.5 && !left) {
-            System.out.println("Dblue");
-            return Constants.Pose.Dblue;
-            } else if (Y <= -X*slope + intercpet+4 && X >= 4.5 && !left) {
-            System.out.println("Eblue");
-            return Constants.Pose.Eblue;
-            } else if (Y <= -X*slope + intercpet+4 && X >= 4.5 && left) {
-            System.out.println("Fblue");
-            return Constants.Pose.Fblue;
-            } else if (Y >= -X*slope + intercpet+4 && Y <= X*slope - intercpet+4 && !left && X >= 4.5) {
-            System.out.println("Gblue");
-            return Constants.Pose.Gblue;
-            } else if (Y >= -X*slope + intercpet+4 && Y <= X*slope - intercpet+4 && left && X >= 4.5) {
-            System.out.println("Hblue");
-            return Constants.Pose.Hblue;
-            } else if (Y >= X*slope - intercpet+4 && X >= 4.5 && !left) {
-            System.out.println("Iblue");
-            return Constants.Pose.Iblue;
-            } else if (Y >= X*slope - intercpet+4 &&  X >= 4.5 && left) {
-            System.out.println("Jblue");
-            return Constants.Pose.Jblue;
-            } else if (Y >= -X*slope + intercpet+4 && X <= 4.5 && left) {
-            System.out.println("Kblue");
-            return Constants.Pose.Kblue;
-            } else if (Y >= -X*slope + intercpet+4 && X <= 4.5 && !left) {
-            System.out.println("Lblue");
-            return Constants.Pose.Lblue;
-            } else {
-            System.out.println("error");
-            return Constants.Pose.Error;
-            }
-
-        } else {
-        if (Y <= -X*slope + intercpetRed+4 && Y >= X*slope - intercpetRed+4 && !left && X <= 13.0) {
-            System.out.println("Gred");
-            return Constants.Pose.Gred;
-            } else if (Y <= -X*slope + intercpetRed+4 && Y >= X*slope - intercpetRed+4 && left && X <= 13.0) {
-            System.out.println("Hred");
-            return Constants.Pose.Hred;
-            } else if (Y <= X*slope - intercpetRed+4 && X <= 13.0 && !left) {
-            System.out.println("Ired");
-            return Constants.Pose.Ired;
-            } else if (Y <= X*slope - intercpetRed+4 && X <= 13.0 && left) {
-            System.out.println("Jred");
-            return Constants.Pose.Jred;
-            } else if (Y <= -X*slope + intercpetRed+4 && X >= 13.0 && left) {
-            System.out.println("Kred");
-            return Constants.Pose.Kred;
-            } else if (Y <= -X*slope + intercpetRed+4 && X >= 13.0 && !left) {
-            System.out.println("Lred");
-            return Constants.Pose.Lred;
-            } else if (Y >= -X*slope + intercpetRed+4 && Y <= X*slope - intercpetRed+4 && left && X >= 13.0) {
-            System.out.println("Ared");
-            return Constants.Pose.Ared;
-            } else if (Y >= -X*slope + intercpetRed+4 && Y <= X*slope - intercpetRed+4 && !left && X >= 13.0) {
-            System.out.println("Bred");
-            return Constants.Pose.Bred;
-            } else if (Y >= X*slope - intercpetRed+4 && X >= 13.0 && left) {
-            System.out.println("Cred");
-            return Constants.Pose.Cred;
-            } else if (Y >= X*slope - intercpetRed+4 &&  X >= 13.0 && !left) {
-            System.out.println("Dred");
-            return Constants.Pose.Dred;
-            } else if (Y >= -X*slope + intercpetRed+4 && X <= 13.0 && !left) {
-            System.out.println("Ered");
-            return Constants.Pose.Ered;
-            } else if (Y >= -X*slope + intercpetRed+4 && X <= 13.0 && left) {
-            System.out.println("Fred");
-            return Constants.Pose.Fred;
-            } else {
-            System.out.println("error");
-            return Constants.Pose.Error;
-            }
-            
-            }
-
-     }  
+    
         
 
         
