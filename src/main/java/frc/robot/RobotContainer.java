@@ -50,15 +50,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.quixlib.motorcontrol.PIDConfig;
 import frc.quixlib.viz.Link2d;
 import frc.quixlib.viz.Viz2d;
-import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.Moveup;
 import frc.robot.commands.MoveupArm;
 import frc.robot.commands.StowArm;
-import frc.robot.commands.AlgeaWack;
 import frc.robot.commands.CoralEleUp;
 import frc.robot.commands.CoralMoveScore;
 import frc.robot.commands.CoralMoveStow;
-import frc.robot.commands.CoralMoveStowAuto;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -170,28 +167,6 @@ private static final Link2d ArmWheelViz =
 ArmWristViz.addLink(
         new Link2d(robotViz, "Arm Wheel", Units.inchesToMeters(2.0), 10, Color.kCoral));
 
-    
-// Climber viz
-// private static final Link2d climberFrameViz =
-// robotViz.addLink(
-//     new Link2d(
-//         robotViz,
-//         "Climber Base",
-//         Constants.Viz.climberBaseLength,
-//         4.0,
-//         Color.kGreen,
-//         new Transform2d(
-//             Constants.Viz.climberBaseX,
-//             Constants.Viz.climberBaseY,
-//             Constants.Viz.climberAngle)));
-// private static final Link2d climberCarriageViz =
-// climberFrameViz.addLink(
-//     new Link2d(
-//         robotViz,
-//         "Climber Carriage",
-//         Constants.Viz.climberCarriageLength,
-//         6.0,
-//         Color.kLightGreen));
 
 
         public static final ElevatorSubsystem elevator = new ElevatorSubsystem(elevatorCarriageViz);
@@ -215,10 +190,8 @@ ArmWristViz.addLink(
         //robotCommands.put("IntakePiece", new IntakeAlgae(intake,1).withTimeout(2.5));
         robotCommands.put("CoralMoveScore", new CoralMoveScore(elevator, arm));
         robotCommands.put("CoralMoveStow", new CoralMoveStow(elevator, arm));
-        robotCommands.put("CoralMoveStowAuto", new CoralMoveStowAuto(elevator, arm));
         robotCommands.put("IntakeCoral", new IntakeCoral(elevator, arm));
         robotCommands.put("StowArm", new StowArm(elevator, arm));
-        robotCommands.put("AlgeaWack", new AlgeaWack(elevator, arm));
         robotCommands.put("L1", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(1)));
         robotCommands.put("L2", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(2)));
         robotCommands.put("L3", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(3)));
@@ -299,21 +272,7 @@ ArmWristViz.addLink(
         //     .withVelocityY(-driver.getLeftX() * MaxSpeed)
         //     .withTargetDirection(new Rotation2d(Math.toRadians(0))))
         // );
-        // driver.b().whileTrue(drivetrain.applyRequest(() ->
-        //     angle.withVelocityX(-driver.getLeftY() * MaxSpeed)
-        //     .withVelocityY(-driver.getLeftX() * MaxSpeed)
-        //     .withTargetDirection(new Rotation2d(Math.toRadians(-90))))
-        // );
-        // driver.a().whileTrue(drivetrain.applyRequest(() ->
-        //     angle.withVelocityX(-driver.getLeftY() * MaxSpeed)
-        //     .withVelocityY(-driver.getLeftX() * MaxSpeed)
-        //     .withTargetDirection(new Rotation2d(Math.toRadians(-180))))
-        // );
-        // driver.x().whileTrue(drivetrain.applyRequest(() ->
-        //     angle.withVelocityX(-driver.getLeftY() * MaxSpeed)
-        //     .withVelocityY(-driver.getLeftX() * MaxSpeed)
-        //     .withTargetDirection(new Rotation2d(Math.toRadians(0))))
-        // );
+        
 
 
        // driver.a().whileTrue(new AlgeaWack(elevator, arm));
@@ -321,11 +280,9 @@ ArmWristViz.addLink(
        driver.a().whileTrue(new MoveupArm(1,elevator,arm)); 
        driver.b().whileTrue(new MoveupArm(2,elevator,arm)); 
        driver.y().whileTrue(new Moveup(elevator));
-      driver.x().whileTrue(new AlgeaWack(elevator, arm));
-      driver.leftTrigger().whileTrue(new AlgeaWack(elevator, arm));
+
 
        operator.y().whileTrue(new CoralEleUp(elevator));
-       operator.a().whileTrue(new AlgeaWack(elevator, arm));
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a - single log.
         // driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -341,14 +298,6 @@ ArmWristViz.addLink(
             .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
     ));
-    
-        // operator.leftBumper().and(operator.x()).onTrue(new ClimbSet(1, climber, elevator, arm));
-        // operator.leftBumper().and(operator.y()).onTrue(new ClimbSet(2, climber, elevator, arm));
-        // operator.leftBumper().and(operator.b()).onTrue(new ClimbSet(3, climber, elevator, arm));
-        // operator.leftBumper().and(operator.start()).onTrue(new ClimbZero(climber, elevator, arm));
-        
-        
-
 
 
         //drivetrain.registerTelemetry(logger::telemeterize);
