@@ -35,18 +35,18 @@ public class Constants {
     // Drivetrain 1-19
     // Elevator / Arm 20-29 
     // Intake 30-39
-    // Climber 40-49
+    
 
 
 
     // "rio" for rio bus
-    public static final String kDriveTrainCanivoreName = "driveTrain"; // need to update after new tuner
+    public static final String kDriveTrainCanivoreName = "driveTrain"; // need to update in tuner generated file
     public static final String kSuperStructureCanivoreName = "superStructure";
 
 
     public static final double g = 9.81; // m/s/s
     public static final double defaultPeriodSecs = 0.02; // s
-    public static boolean isSim =  edu.wpi.first.wpilibj.RobotBase.isSimulation(); // 
+    public static boolean isSim =  edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
     public static boolean PoseSoring = !false; // Only move Scoring Stuff if close to reef
     public static boolean ElevatorOff = false; // Shut off Elevator
     public static boolean Lineup = false; // Auto Lineup to Reef to Scrore.
@@ -54,7 +54,8 @@ public class Constants {
 
 
     public static class Vision {
-        public static final String kCameraName = "Front";
+        public static final String kCameraName = "FrontCamera"; // Front
+        
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center, up 15 degs.
         public static final Transform3d kRobotToCam =
                 new Transform3d(new Translation3d(Units.inchesToMeters(13.311564), 0.0, Units.inchesToMeters(7.332072)), new Rotation3d(0, Math.toRadians(-20), 0));
@@ -64,10 +65,29 @@ public class Constants {
                 AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
         // The standard deviations of our vision estimated poses, which affect correction rate
-        // (Fake values. Experiment and determine estimation noise on an actual robot.)
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        // Increase these numbers to trust your state estimate less.
+        // 7028 values
+
+        // public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        // public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+
+        // 461 values
+        // public static final Matrix<N3, N1> ODOM_STD_DEV = VecBuilder.fill(0.03, 0.03, Units.degreesToRadians(0.01));
+        // public static final Function<Double, Matrix<N3, N1>> VISION_STD_DEV_MULTITAG_FUNCTION =
+        //         dist -> dist < 3.0
+        //                 ? VecBuilder.fill(Math.min(0.03, 0.03 * dist), Math.min(0.03, 0.03 * dist), DriverStation.isEnabled() ? Units.degreesToRadians(5.0) : Units.degreesToRadians(0.05))
+        //                 : VecBuilder.fill(0.05 * dist, 0.05 * dist, Units.degreesToRadians(180.0) * dist);
+        // public static final Function<Double, Matrix<N3, N1>> VISION_STD_DEV_FUNCTION =
+        //         dist -> dist < 3.0
+        //                 ? VecBuilder.fill(0.075 * dist, 0.075 * dist, Units.degreesToRadians(180.0) * dist)
+        //                 : VecBuilder.fill(0.1 * dist, 0.1 * dist, Units.degreesToRadians(180.0) * dist);
+
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8); // m, m, rad
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+        public static final Matrix<N3, N1> ODOM_STD_DEV = VecBuilder.fill(0.03, 0.03, Units.degreesToRadians(0.01));
+        
     }
+
 
     public static class Drive { //Drive Constants that are not in TunerConstants / Gnenerated
 

@@ -62,7 +62,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.commands.AutoPilotTest;
+
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -83,7 +83,8 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    // public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public static final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain(TunerConstants.DrivetrainConstants,250, Constants.Vision.ODOM_STD_DEV, Constants.Vision.kSingleTagStdDevs, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 
     private Optional<Alliance> m_ally = DriverStation.getAlliance();
 
@@ -172,9 +173,6 @@ ArmWristViz.addLink(
         public static final ElevatorSubsystem elevator = new ElevatorSubsystem(elevatorCarriageViz);
         //public static final IntakeSubsystem intake = new IntakeSubsystem(intakeArmViz, intakeRollerViz);
         public static final ArmSubsystem arm = new ArmSubsystem(ArmArmViz,ArmWristViz,ArmWheelViz);
-//        public static final ClimberSubsystem climber = new ClimberSubsystem(climberCarriageViz);
-
-
 
 
 
@@ -193,9 +191,7 @@ ArmWristViz.addLink(
         robotCommands.put("IntakeCoral", new IntakeCoral(elevator, arm));
         robotCommands.put("StowArm", new StowArm(elevator, arm));
         robotCommands.put("L1", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(1)));
-        robotCommands.put("L2", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(2)));
-        robotCommands.put("L3", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(3)));
-        robotCommands.put("L4", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(4)));
+
     
         NamedCommands.registerCommands(robotCommands);
 
@@ -264,8 +260,6 @@ ArmWristViz.addLink(
        // driver.leftTrigger().whileTrue(new IntakeAlgae(intake, 0));
         driver.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         
-        driver.y().whileTrue(
-            new AutoPilotTest(drivetrain, new Pose2d(2, 2, Rotation2d.k180deg), Rotation2d.kZero));
 
         // driver.y().whileTrue(drivetrain.applyRequest(() ->
         //     angle.withVelocityX(-driver.getLeftY() * MaxSpeed)
@@ -290,8 +284,7 @@ ArmWristViz.addLink(
         // driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         // driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         
-     //   operator.leftTrigger().whileTrue(new IntakeAlgae(intake, 2));
-     //   operator.rightTrigger().whileTrue(new IntakeAlgae(intake, 1));
+
         operator.rightBumper().whileTrue(new StowArm(elevator, arm));
         operator.start().whileTrue(drivetrain.applyRequest(() ->
         drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
