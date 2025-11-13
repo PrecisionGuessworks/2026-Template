@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import java.util.ArrayList;
@@ -29,23 +25,11 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-// import org.littletonrobotics.junction.LoggedRobot;
-// import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.fasterxml.jackson.databind.util.internal.PrivateMaxEntriesMap;
-import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.swerve.SwerveModule;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
@@ -67,6 +51,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.generated.Elastic;
+import frc.robot.generated.Vision;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 
@@ -74,8 +60,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-
-  private final boolean kUseLimelight = false;
 
   private String autoName, newAutoName;
 
@@ -141,7 +125,7 @@ public class Robot extends TimedRobot {
                 var estStdDevs = vision.getEstimationStdDevs();
 
                 RobotContainer.drivetrain.addVisionMeasurement(
-                        est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                        est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds), estStdDevs);
                   //System.out.println("Vision Estimation: " + est.estimatedPose.toPose2d());
         Pose2d pose = est.estimatedPose.toPose2d();
         double[] poseArray = {pose.getX(), pose.getY(), pose.getRotation().getDegrees()};
@@ -261,6 +245,76 @@ if (!isReal()){
 
   @Override
   public void disabledPeriodic() { 
+    updateElasticField();
+    
+}
+  @Override
+  public void disabledExit() {}
+
+  @Override
+  public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    autoName = "";
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+    
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    updateElasticField();
+  }
+
+  @Override
+  public void autonomousExit() {}
+
+  @Override
+  public void teleopInit() {
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+  }
+
+  @Override
+  public void teleopPeriodic() {
+    SwerveDriveState state = RobotContainer.drivetrain.getState();
+    Pose2d pose = state.Pose;
+    m_field.getObject("path").setPoses();
+    m_field.setRobotPose(pose);
+    SmartDashboard.putData(m_field);
+  }
+
+  @Override
+  public void teleopExit() {}
+
+  @Override
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
+
+  @Override
+  public void testPeriodic() {}
+
+  @Override
+  public void testExit() {}
+
+  @Override
+  public void simulationPeriodic() {
+// Update drivetrain simulation
+
+SwerveDriveState state = RobotContainer.drivetrain.getState();
+Pose2d pose = state.Pose;
+// Update camera simulation
+vision.simulationPeriodic(pose);
+
+var debugField = vision.getSimDebugField();
+debugField.getObject("EstimatedRobot").setPose(pose);
+
+
+  }
+
+  public void updateElasticField() {
     ally = DriverStation.getAlliance();
     newAutoName = m_robotContainer.getAutonomousCommand().getName();
     if (autoName != newAutoName | ally != newAlly) {
@@ -310,119 +364,5 @@ if (!isReal()){
     Pose2d pose = state.Pose;
     m_field.setRobotPose(pose);
     SmartDashboard.putData(m_field);
-    
-}
-  @Override
-  public void disabledExit() {}
-
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    autoName = "";
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-    
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-    ally = DriverStation.getAlliance();
-    newAutoName = m_robotContainer.getAutonomousCommand().getName();
-    if (autoName != newAutoName | ally != newAlly) {
-      newAlly = ally;
-        autoName = newAutoName;
-        if (AutoBuilder.getAllAutoNames().contains(autoName)) {
-            System.out.println("Displaying " + autoName);
-            try {
-                List<PathPlannerPath> pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
-                List<Pose2d> poses = new ArrayList<>();
-                for (PathPlannerPath path : pathPlannerPaths) {
-                  if (ally.isPresent()) {
-                    if (ally.get() == Alliance.Red) {
-                      poses.addAll(path.getAllPathPoints().stream()
-                      .map(point -> new Pose2d(Constants.Pose.feildFlip - point.position.getX(),Constants.Pose.feildFlipy - point.position.getY(), new Rotation2d()))
-                    .collect(Collectors.toList()));
-                    Elastic.selectTab("RED");
-                    }
-                    if (ally.get() == Alliance.Blue) {
-                      poses.addAll(path.getAllPathPoints().stream()
-                      .map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d()))
-                    .collect(Collectors.toList()));
-                    Elastic.selectTab("BLUE");
-                    }
-                  }
-                  else {
-                      System.out.println("No alliance found");
-                      poses.addAll(path.getAllPathPoints().stream()
-                      .map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d()))
-                    .collect(Collectors.toList()));
-                  }
-                }
-                
-                m_field.getObject("path").setPoses(poses);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                if (e instanceof ParseException) {
-                    e.printStackTrace();
-                } else {
-                  e.printStackTrace();
-                }
-            }
-        }
-    }
-    SwerveDriveState state = RobotContainer.drivetrain.getState();
-    Pose2d pose = state.Pose;
-    m_field.setRobotPose(pose);
-    SmartDashboard.putData(m_field);
-  }
-
-  @Override
-  public void autonomousExit() {}
-
-  @Override
-  public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
-
-  @Override
-  public void teleopPeriodic() {
-    SwerveDriveState state = RobotContainer.drivetrain.getState();
-    Pose2d pose = state.Pose;
-    m_field.getObject("path").setPoses();
-    m_field.setRobotPose(pose);
-    SmartDashboard.putData(m_field);
-  }
-
-  @Override
-  public void teleopExit() {}
-
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  @Override
-  public void testPeriodic() {}
-
-  @Override
-  public void testExit() {}
-
-  @Override
-  public void simulationPeriodic() {
-// Update drivetrain simulation
-
-SwerveDriveState state = RobotContainer.drivetrain.getState();
-Pose2d pose = state.Pose;
-// Update camera simulation
-vision.simulationPeriodic(pose);
-
-var debugField = vision.getSimDebugField();
-debugField.getObject("EstimatedRobot").setPose(pose);
-
-
   }
 }
