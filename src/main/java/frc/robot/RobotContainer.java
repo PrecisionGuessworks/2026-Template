@@ -241,8 +241,8 @@ ArmWristViz.addLink(
         //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         // ));
 
-        driver.leftBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), pathfindingCommand(true)));
-        driver.rightBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), pathfindingCommand(false)));
+        driver.leftBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), pathfindingCommand(true,true)));
+        driver.rightBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), pathfindingCommand(false,true)));
         driver.leftBumper().onFalse(new CoralMoveStow(elevator, arm));
         driver.rightBumper().onFalse(new CoralMoveStow(elevator, arm));
 
@@ -334,7 +334,7 @@ ArmWristViz.addLink(
     boolean zeroed = false;
     // Create the constraints to use while pathfinding
     
-    private Command pathfindingCommand(boolean left) {
+    private Command pathfindingCommand(boolean left, boolean lineup) {
         
         PIDController xController = new PIDController(Constants.Pose.PTranslationSlow, Constants.Pose.ITranslationSlow, Constants.Pose.DTranslationSlow);
         xController.setIntegratorRange(-Constants.Pose.SpeedReductionFactor, Constants.Pose.SpeedReductionFactor);
@@ -351,7 +351,7 @@ ArmWristViz.addLink(
             public void initialize() {
                 m_ally = DriverStation.getAlliance();
                 // targetPose = getTargetPose(left);
-                if (drivetrain.getLineup()){
+                if (lineup){
                     xController.reset();
                     yController.reset();
                     thetaController.reset();
@@ -363,7 +363,7 @@ ArmWristViz.addLink(
                 if (driver.axisLessThan(0, Constants.Drive.DriveDeadband).getAsBoolean()&&driver.axisLessThan(1, Constants.Drive.DriveDeadband).getAsBoolean()&&driver.axisLessThan(4, Constants.Drive.RotationDeadband).getAsBoolean()&&driver.axisLessThan(5, Constants.Drive.RotationDeadband).getAsBoolean()) {
                     zeroed = true;
                 }
-                if (drivetrain.getLineup()){
+                if (lineup){
                     Pose2d currentPose = drivetrain.getState().Pose;
                     ChassisSpeeds currentSpeeds = drivetrain.getState().Speeds;
                     X = currentPose.getTranslation().getX();
@@ -399,7 +399,7 @@ ArmWristViz.addLink(
     
             @Override
             public boolean isFinished() {
-                return !drivetrain.getLineup()||
+                return !lineup||
                 (xController.atSetpoint() && yController.atSetpoint() && thetaController.atSetpoint()||
                 (zeroed&&driver.axisMagnitudeGreaterThan(0, Constants.Drive.DriveDeadband).getAsBoolean()||driver.axisMagnitudeGreaterThan(1, Constants.Drive.DriveDeadband).getAsBoolean()||driver.axisMagnitudeGreaterThan(4, Constants.Drive.RotationDeadband).getAsBoolean()||driver.axisMagnitudeGreaterThan(5, Constants.Drive.RotationDeadband).getAsBoolean()));
             }

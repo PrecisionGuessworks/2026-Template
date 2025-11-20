@@ -152,17 +152,11 @@ public class Robot extends TimedRobot {
   if(m_robotContainer.driver.back().getAsBoolean()) {
     lineup = true;
   }
-  if(!m_robotContainer.driver.back().getAsBoolean()&&lineup) {
-    RobotContainer.drivetrain.setLineup(!RobotContainer.drivetrain.getLineup());
-    lineup = false;
-  }
+
   if(m_robotContainer.operator.back().getAsBoolean()) {
     elevatorOn = true;
   }
-  if(!m_robotContainer.operator.back().getAsBoolean()&&elevatorOn) {
-    RobotContainer.elevator.setElevatorOn(!RobotContainer.elevator.getElevatorOn());
-    elevatorOn = false;
-  }
+
   
   // double leftY = m_robotContainer.operator.getLeftY();
   // if (Math.abs(leftY) > 0.1) { // Deadband of 0.1

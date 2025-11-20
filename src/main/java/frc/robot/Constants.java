@@ -47,9 +47,6 @@ public class Constants {
     public static final double g = 9.81; // m/s/s
     public static final double defaultPeriodSecs = 0.02; // s
     public static boolean isSim =  edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
-    public static boolean PoseSoring = !false; // Only move Scoring Stuff if close to reef
-    public static boolean ElevatorOff = false; // Shut off Elevator
-    public static boolean Lineup = false; // Auto Lineup to Reef to Scrore.
     public static boolean ExtraInfo = true; // Turn on Extra network info
 
 
