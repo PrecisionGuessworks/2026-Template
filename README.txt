@@ -1,7 +1,8 @@
 TODO:
 
--clean up
-
+- clean up
+- Find out why ratio in sim is not Right
+- Try to fix magcoder in sim
 
 ------------------------------- Controller Layouts --------------------------------------
 

@@ -103,20 +103,12 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    /*
-     * This example of adding Limelight is very simple and may not be sufficient for on-field use.
-     * Users typically need to provide a standard deviation that scales with the distance to target
-     * and changes with number of tags available.
-     *
-     * This example is sufficient to show that vision integration is possible, though exact implementation
-     * of how to use vision should be tuned per-robot and to the team's specification.
-     */
-    // if (kUseLimelight) {
-    //   var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-    //   if (llMeasurement != null) {
-    //     RobotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
-    //   }
+ 
+    // var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+    // if (llMeasurement != null) {
+    //  RobotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
     // }
+
     try{
       var visionEst = vision.getEstimatedGlobalPose();
     visionEst.ifPresent(
@@ -126,7 +118,6 @@ public class Robot extends TimedRobot {
 
                 RobotContainer.drivetrain.addVisionMeasurement(
                         est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds), estStdDevs);
-                  //System.out.println("Vision Estimation: " + est.estimatedPose.toPose2d());
         Pose2d pose = est.estimatedPose.toPose2d();
         double[] poseArray = {pose.getX(), pose.getY(), pose.getRotation().getDegrees()};
         SmartDashboard.putNumberArray("Camera Curret Pose", poseArray);
@@ -140,12 +131,6 @@ public class Robot extends TimedRobot {
 
   } else if (m_robotContainer.driver.pov(90).getAsBoolean() == true || m_robotContainer.operator.pov(90).getAsBoolean() == true){
     RobotContainer.elevator.setHeightLocation(3);
-
-  } else if (m_robotContainer.driver.pov(180).getAsBoolean() == true || m_robotContainer.operator.pov(180).getAsBoolean() == true){
-    RobotContainer.elevator.setHeightLocation(2);
-
-  } else if (m_robotContainer.driver.pov(270).getAsBoolean() == true || m_robotContainer.operator.pov(270).getAsBoolean() == true){
-    RobotContainer.elevator.setHeightLocation(1);
 
   }
 

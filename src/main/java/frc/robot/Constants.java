@@ -38,19 +38,19 @@ public class Constants {
     
 
 
-
     // "rio" for rio bus
-    public static final String kDriveTrainCanivoreName = "driveTrain"; // need to update in tuner generated file
+    public static final String kDriveTrainCanivoreName = "driveTrain"; // need to update in tuner generated file when new file is used
     public static final String kSuperStructureCanivoreName = "superStructure";
 
 
-    public static final double g = 9.81; // m/s/s
-    public static final double defaultPeriodSecs = 0.02; // s
+    public static final double g = 9.81; 
+    public static final double defaultPeriodSecs = 0.02; 
     public static boolean isSim =  edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
-    public static boolean ExtraInfo = true; // Turn on Extra network info
+    public static boolean ExtraInfo = true; // Turn on Extra network info, Just leave as true unless network is overloaded.
 
 
-    public static class Drive { //Drive Constants that are not in TunerConstants / Gnenerated
+    public static class Drive { 
+        //Drive Constants that are not in TunerConstants / Gnenerated
 
         // PID for Rotation and Translation for Auto and Teleop Snap
         public static final double PTranslation = 5;
@@ -102,9 +102,7 @@ public class Constants {
     public static final double Expo_kV = 0.1;    
     public static final double Expo_kA = 0.1; // Use a slower kA of 0.1 V/(rps/s)
 
-    // TODO: use real numbers
     public static final double minHeight = 0.0; // m
-    //public static final double powerCutoffHeight = Units.inchesToMeters(0.1); // m
     public static final double maxHeight = Units.inchesToMeters(60.0); // m
     public static final double stowHeight = Units.inchesToMeters(0.5); // m
     public static final double wristStowHeight = Units.inchesToMeters(4); // m
@@ -123,7 +121,7 @@ public class Constants {
     public static final double PreStow = Units.inchesToMeters(10); // m
     public static final double SlowmodeHeight = Units.inchesToMeters(25); // m
 
-    // For simulation.
+    // For simulation only
     public static final double simCarriageMass = 7.0; // kg
 
   }
@@ -188,14 +186,11 @@ public class Constants {
     public static final int rollerPositionPIDSlot = 0;
     public static final PIDConfig rollerPositionPIDConfig = new PIDConfig(30.0, 0.0, 0.0);
 
-    // TODO: Use real values
-    public static final double armBootAbsPositionOffset = Units.degreesToRadians(0);
     public static final double armMinAngle = Units.degreesToRadians(-1.0); // rads 
     public static final double armMaxAngle = Units.degreesToRadians(150.0); // rads 
     public static final double armStartingAngle = Units.degreesToRadians(90);
     public static final double armCgOffset = Units.degreesToRadians(0);
 
-    public static final double wristBootAbsPositionOffset = Units.degreesToRadians(0);
     public static final double wristMinAngle = Units.degreesToRadians(-16.0); // rads 
     public static final double wristMaxAngle = Units.degreesToRadians(181.0); // rads 
     public static final double wristStartingAngle = Units.degreesToRadians(181) ; //+ armStartingAngle;
@@ -233,7 +228,7 @@ public class Constants {
         new Transform2d(Units.inchesToMeters(12.0), 0.0, new Rotation2d());
     public static final double ArmHeight = Units.inchesToMeters(12);
 
-    // For simulation.
+    // For simulation only
     public static final double simArmMOI = 0.379; // kgMetersSquared
     public static final double simArmCGLength = Units.inchesToMeters(8.5); // m
     public static final double simRollerMOI = 0.003; // kgMetersSquared
@@ -242,8 +237,6 @@ public class Constants {
     public static final double simwristCGLength = Units.inchesToMeters(3.5); // m
     
   }
-
-
 
 
   public static final class Pose {
@@ -277,16 +270,14 @@ public class Constants {
   public static class Vision {
     public static final String kCameraName = "FrontCamera"; // Front
     
-    // Cam mounted facing forward, half a meter forward of center, half a meter up from center, up 15 degs.
+    // Cam mounted facing forward, 13in forward of center, 7in up from center, up 20 degs.
     public static final Transform3d kRobotToCam =
             new Transform3d(new Translation3d(Units.inchesToMeters(13.311564), 0.0, Units.inchesToMeters(7.332072)), new Rotation3d(0, Math.toRadians(-20), 0));
 
     public static final AprilTagFieldLayout kTagLayout =
             AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
-    // The standard deviations of our vision estimated poses, which affect correction rate
     // Increase these numbers to trust your state estimate less.
-
     // 461 values
     // public static final Matrix<N3, N1> ODOM_STD_DEV = VecBuilder.fill(0.03, 0.03, Units.degreesToRadians(0.01));
     // public static final Function<Double, Matrix<N3, N1>> VISION_STD_DEV_MULTITAG_FUNCTION =
@@ -325,8 +316,6 @@ public class Constants {
     public static final double ArmRollerX = Units.inchesToMeters(8.0);
     public static final double ArmRollerY = Units.inchesToMeters(0);
 
-    
-
     public static final double angularVelocityScalar = 0.01;
   }
 
@@ -345,12 +334,6 @@ public class Constants {
   }
 
 
-
-
-
-
-
-  //----------------------------------------------------------OLD DO NOT REMOVE----------------------------------------------------------
   public static final class Intake {
     public static final int beamBreakPort = 1;
 
@@ -381,10 +364,9 @@ public class Constants {
     public static final double deployMaxAcceleration = 140.0; // rad/s^2
     public static final double deployMaxJerk = 800.0; // rad/s^3
 
-    public static final double bootAbsPositionOffset = Units.degreesToRadians(1.8);
     public static final double minAngle = Units.degreesToRadians(-20.0); // rads
     public static final double maxAngle = Units.degreesToRadians(110.0); // rads
-    public static final double startingAngle = maxAngle + bootAbsPositionOffset;
+    public static final double startingAngle = maxAngle;
     public static final double intakeDeployAngle = Math.toRadians(40); // rad
     public static final double intakeScoreAngle = Math.toRadians(85); // rad
     public static final double intakeStowAngle = Math.toRadians(105); // rad
@@ -393,7 +375,7 @@ public class Constants {
     public static final double outtakeRollerVelocity = -100; // rad/s
     public static final double holdRollerVelocity = 10; // rad/s
 
-    // For simulation.
+    // For simulation only
     public static final double simArmMOI = 0.2; // kgMetersSquared
     public static final double simArmCGLength = Units.inchesToMeters(7.0); // m
     public static final double simRollerMOI = 0.01; // kgMetersSquared

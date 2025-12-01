@@ -163,7 +163,7 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
       return this;
     }
 
-    public QuixTalonFXConfiguration setFeedbackConfig(final FeedbackSensorSourceValue FeedbackSensorSource, final int CANID, final double sensorOffset, final MechanismRatio RotorToSensorRatio, final MechanismRatio SensorToMechRatio) { // remote option, offset, senor ratio to mech and rotor
+    public QuixTalonFXConfiguration setFeedbackConfig(final FeedbackSensorSourceValue FeedbackSensorSource, final int CANID, final double sensorOffset, final MechanismRatio RotorToSensorRatio, final MechanismRatio SensorToMechRatio) { // remote option, offset, sensor ratio to mech and rotor
     feedbackSensorSource = FeedbackSensorSource;
     FeedbackRemoteSensorCANID = CANID;
     FeedbackSensorOffset = sensorOffset;
