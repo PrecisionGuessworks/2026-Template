@@ -187,7 +187,7 @@ ArmWristViz.addLink(
         robotCommands.put("CoralMoveStow", new CoralMoveStow(elevator, arm));
         robotCommands.put("IntakeCoral", new IntakeCoral(elevator, arm));
         robotCommands.put("StowArm", new StowArm(elevator, arm));
-        robotCommands.put("L1", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(1)));
+        robotCommands.put("L4", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(4)));
 
     
         NamedCommands.registerCommands(robotCommands);

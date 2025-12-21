@@ -5,9 +5,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "StowArm"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Newpath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralMoveScore"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         }
       ]

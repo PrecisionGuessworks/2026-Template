@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -45,7 +46,7 @@ public class Constants {
 
     public static final double g = 9.81; 
     public static final double defaultPeriodSecs = 0.02; 
-    public static boolean isSim =  edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
+    public static boolean isSim =  false;// edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
     public static boolean ExtraInfo = true; // Turn on Extra network info, Just leave as true unless network is overloaded.
 
 
@@ -91,7 +92,7 @@ public class Constants {
         new MechanismRatio(
             1, (9.0 / 1.0), Math.PI * sprocketPitchDiameter); // Real
     public static final boolean motorInvert = true;
-    public static final boolean followerInvert = true;
+    public static final MotorAlignmentValue followerInvert = MotorAlignmentValue.Opposed;
     public static final int motorPositionSlot = 0;
     public static final PIDConfig motorPIDConfig = isSim ? 
         new PIDConfig(5, 0.001, 0.1, 0.04, 0.02, 0.008, 0.13, GravityTypeValue.Elevator_Static) : 
@@ -350,7 +351,7 @@ public class Constants {
     public static final CANDeviceID deployMotorID = new CANDeviceID(31, kSuperStructureCanivoreName);
     public static final CANDeviceID deployFollowerID = new CANDeviceID(32, kSuperStructureCanivoreName);
 
-    public static final boolean followerInvert = true;
+    public static final MotorAlignmentValue followerInvert = MotorAlignmentValue.Opposed;
     public static final MechanismRatio deployMotorRatio =
         isSim ? 
         new MechanismRatio(

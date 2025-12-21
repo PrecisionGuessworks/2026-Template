@@ -62,6 +62,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean Loc2 = false;
   private boolean Loc3 = false;
   private boolean Loc4 = false;
+  private boolean m_ElevatorOff = false;
+  private boolean m_ElevatorOffLast = m_ElevatorOff;
 
   public ElevatorSubsystem(Link2d elevatorCarriageViz) {
     // Show scheduler status in SmartDashboard.
@@ -105,6 +107,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double armAngle = 0;
   private double wristAngle = 0;
 
+  public void setElevatorOn(boolean lineup){
+    m_ElevatorOff = lineup;
+}
+public boolean getElevatorOn(){
+    return m_ElevatorOff;
+}
 
   @Override
   public void periodic() {
@@ -128,9 +136,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // This method will be called once per scheduler run
 
-    m_motor.setStatorCurrentLimit(70,30);
-    m_follower.setStatorCurrentLimit(70,30);
- 
+    if (m_ElevatorOff != m_ElevatorOffLast){
+      m_ElevatorOffLast = m_ElevatorOff;
+      if (m_ElevatorOff){
+        m_motor.setStatorCurrentLimit(1,1);
+        m_follower.setStatorCurrentLimit(1,1);
+      } else {
+        m_motor.setStatorCurrentLimit(70,30);
+        m_follower.setStatorCurrentLimit(70,30);
+      }
+    }
+    
     m_motor.setMotionMagicPositionSetpointExpo(
         Constants.Elevator.motorPositionSlot,
         m_targetHeight
@@ -158,8 +174,8 @@ public class ElevatorSubsystem extends SubsystemBase {
       Loc4 = true;
     }
     
-    // SmartDashboard.putBoolean(
-    //       "Elevator", !m_ElevatorOff);
+    SmartDashboard.putBoolean(
+          "Elevator", !m_ElevatorOff);
           
           if(Constants.ExtraInfo){
     SmartDashboard.putNumber(

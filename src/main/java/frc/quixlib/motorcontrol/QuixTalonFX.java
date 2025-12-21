@@ -18,6 +18,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -49,7 +50,7 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
   private final MotionMagicExpoVoltage m_motionMagicExpoControl = new MotionMagicExpoVoltage(0);
   private final MotionMagicExpoTorqueCurrentFOC m_motionMagicExpoTorqueControl = new MotionMagicExpoTorqueCurrentFOC(0);
   private final DynamicMotionMagicVoltage m_dynamicMotionMagicControl =
-      new DynamicMotionMagicVoltage(0, 0, 0, 0);
+      new DynamicMotionMagicVoltage(0, 0, 0);
 
   private final QuixStatusSignal m_percentOutputSignal;
   private final QuixStatusSignal m_sensorPositionSignal;
@@ -243,7 +244,7 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
   public QuixTalonFX(
       final CANDeviceID canID,
       final QuixTalonFX leader,
-      final boolean opposeLeader,
+      final MotorAlignmentValue opposeLeader,
       final QuixTalonFXConfiguration config) {
     this(canID, leader.getMechanismRatio(), config);
     m_controller.setControl(new Follower(leader.getDeviceID(), opposeLeader));

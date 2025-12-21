@@ -69,7 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
               .setBootPositionOffset(ArmStartingAngle)
               .setReverseSoftLimit(Constants.Arm.armMinAngle)
               .setForwardSoftLimit(Constants.Arm.armMaxAngle)
-            //  .setFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, 15, 0.0,Constants.Arm.armMotorRatio,Constants.Arm.armSensorRatio)
+              // .setFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, 15, 0.0,Constants.Arm.armMotorRatio,Constants.Arm.armSensorRatio)
               );
 
 private final QuixTalonFX m_wristMotor =
