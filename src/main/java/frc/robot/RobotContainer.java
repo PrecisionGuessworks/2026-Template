@@ -1,31 +1,29 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static frc.robot.Constants.Drive.DRotation;
+import static frc.robot.Constants.Drive.DriveDeadband;
+import static frc.robot.Constants.Drive.IRotation;
+import static frc.robot.Constants.Drive.MaxAngularRatePercentage;
+import static frc.robot.Constants.Drive.MaxSpeedPercentage;
+import static frc.robot.Constants.Drive.PRotation;
+import static frc.robot.Constants.Drive.RotationDeadband;
+import static frc.robot.Constants.Drive.SnapDriveDeadband;
+import static frc.robot.Constants.Drive.SnapRotationDeadband;
 
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import org.json.simple.parser.ParseException;
-import org.photonvision.PhotonUtils;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
-import com.pathplanner.lib.util.FileVersionException;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,68 +37,51 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.quixlib.motorcontrol.PIDConfig;
 import frc.quixlib.viz.Link2d;
 import frc.quixlib.viz.Viz2d;
-import frc.robot.commands.Moveup;
-import frc.robot.commands.MoveupArm;
-import frc.robot.commands.StowArm;
 import frc.robot.commands.CoralEleUp;
 import frc.robot.commands.CoralMoveScore;
 import frc.robot.commands.CoralMoveStow;
 import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.Moveup;
+import frc.robot.commands.MoveupArm;
+import frc.robot.commands.StowArm;
 import frc.robot.generated.Telemetry;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
-
-
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-
-import static frc.robot.Constants.Drive.*;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DrivetrainExtra;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 public class RobotContainer {
-    private double MaxSpeed = MaxSpeedPercentage*(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(MaxAngularRatePercentage).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double MaxSpeed = MaxSpeedPercentage*(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
+    public static double MaxAngularRate = RotationsPerSecond.of(MaxAngularRatePercentage).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    public final CommandXboxController driver = new CommandXboxController(0);
-    public final CommandXboxController operator = new CommandXboxController(1);
+    public static final CommandXboxController driver = new CommandXboxController(0);
+    public static final CommandXboxController operator = new CommandXboxController(1);
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     // public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain(TunerConstants.DrivetrainConstants,250, Constants.Vision.ODOM_STD_DEV, Constants.Vision.kSingleTagStdDevs, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 
-    private Optional<Alliance> m_ally = DriverStation.getAlliance();
-
     /* Setting up bindings for necessary control of the swerve drive platform */
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    public static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * DriveDeadband).withRotationalDeadband(MaxAngularRate * RotationDeadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.FieldCentric driveAuto = new SwerveRequest.FieldCentric()
+    public static final SwerveRequest.FieldCentric driveAuto = new SwerveRequest.FieldCentric()
             .withDeadband(SnapDriveDeadband).withRotationalDeadband(SnapRotationDeadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    // private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
+    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-            private final SwerveRequest.FieldCentricFacingAngle angle = new SwerveRequest.FieldCentricFacingAngle()
-            .withDeadband(MaxSpeed * SnapRotationDeadband).withRotationalDeadband(MaxAngularRate * SnapRotationDeadband) // Add a deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors 
-          //  .withSteerRequestType(SteerRequestType.MotionMagicExpo); // Use motion magic control for steer motors
+    public final SwerveRequest.FieldCentricFacingAngle angle = new SwerveRequest.FieldCentricFacingAngle()
+        .withDeadband(MaxSpeed * SnapRotationDeadband).withRotationalDeadband(MaxAngularRate * SnapRotationDeadband) // Add a deadband
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors 
+         //  .withSteerRequestType(SteerRequestType.MotionMagicExpo); // Use motion magic control for steer motors
 
     private PowerDistribution powerDistribution = new PowerDistribution();
 
@@ -241,8 +222,8 @@ ArmWristViz.addLink(
         //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         // ));
 
-        driver.leftBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), pathfindingCommand(true,true)));
-        driver.rightBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), pathfindingCommand(false,true)));
+        driver.leftBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), DrivetrainExtra.pathfindingCommand(true,true)));
+        driver.rightBumper().whileTrue(new ParallelCommandGroup(new CoralMoveScore(elevator, arm), DrivetrainExtra.pathfindingCommand(false,true)));
         driver.leftBumper().onFalse(new CoralMoveStow(elevator, arm));
         driver.rightBumper().onFalse(new CoralMoveStow(elevator, arm));
 
@@ -294,17 +275,7 @@ ArmWristViz.addLink(
     }
 
 
-
-
-
-
-
-
-
-
 // --------------------------------------------------------- Commands --------------------------------------------------------- 
-
-
 
 
     public Command getAutonomousCommand() {
@@ -312,134 +283,6 @@ ArmWristViz.addLink(
         return autoChooser.getSelected();
     }
 
-    public Rotation2d targetangle() {
-        /* First put the drivetrain into auto run mode, then run the auto */
-        SwerveDriveState state = drivetrain.getState();
-        Pose2d pose = state.Pose;
-        pose = new Pose2d(pose.getTranslation(), new Rotation2d(0));
-        Pose2d targetpose = new Pose2d(16.7,5.5,new Rotation2d(0));
-        System.out.println(PhotonUtils.getYawToPose(pose,targetpose));
-        return PhotonUtils.getYawToPose(pose,targetpose);
-        
-    }
-
-    double X;
-    double Y;
-    double VX;
-    double VY;
-    double intercpet = Math.tan(Units.degreesToRadians(30))*4.5;
-    double intercpetRed = Math.tan(Units.degreesToRadians(30))*13;
-    double slope = Math.tan(Units.degreesToRadians(30));
-    Pose2d targetPose = Constants.Pose.Error; // Example target pose
-    boolean zeroed = false;
-    // Create the constraints to use while pathfinding
-    
-    private Command pathfindingCommand(boolean left, boolean lineup) {
-        
-        PIDController xController = new PIDController(Constants.Pose.PTranslationSlow, Constants.Pose.ITranslationSlow, Constants.Pose.DTranslationSlow);
-        xController.setIntegratorRange(-Constants.Pose.SpeedReductionFactor, Constants.Pose.SpeedReductionFactor);
-        xController.setTolerance(Constants.Pose.Tolerance);
-        PIDController yController = new PIDController(Constants.Pose.PTranslationSlow, Constants.Pose.ITranslationSlow, Constants.Pose.DTranslationSlow);
-        yController.setIntegratorRange(-Constants.Pose.SpeedReductionFactor, Constants.Pose.SpeedReductionFactor);
-        yController.setTolerance(Constants.Pose.Tolerance);
-        PIDController thetaController = new PIDController(Constants.Pose.PRotationSlow, Constants.Pose.IRotationSlow, Constants.Pose.DRotationSlow);
-        thetaController.enableContinuousInput(Units.degreesToRadians(-180),Units.degreesToRadians(180));
-        thetaController.setTolerance(Constants.Pose.Tolerance);
-
-        return new Command() {
-            @Override
-            public void initialize() {
-                m_ally = DriverStation.getAlliance();
-                // targetPose = getTargetPose(left);
-                if (lineup){
-                    xController.reset();
-                    yController.reset();
-                    thetaController.reset();
-                }
-            }
-    
-            @Override
-            public void execute() {
-                if (driver.axisLessThan(0, Constants.Drive.DriveDeadband).getAsBoolean()&&driver.axisLessThan(1, Constants.Drive.DriveDeadband).getAsBoolean()&&driver.axisLessThan(4, Constants.Drive.RotationDeadband).getAsBoolean()&&driver.axisLessThan(5, Constants.Drive.RotationDeadband).getAsBoolean()) {
-                    zeroed = true;
-                }
-                if (lineup){
-                    Pose2d currentPose = drivetrain.getState().Pose;
-                    ChassisSpeeds currentSpeeds = drivetrain.getState().Speeds;
-                    X = currentPose.getTranslation().getX();
-                    Y = currentPose.getTranslation().getY();
-                    VX = currentSpeeds.vxMetersPerSecond;
-                    VY = currentSpeeds.vyMetersPerSecond;
-                    double xOutput =Constants.Pose.SpeedReductionFactor* MaxSpeed * xController.calculate(X, targetPose.getX());
-                    double yOutput =Constants.Pose.SpeedReductionFactor* MaxSpeed * yController.calculate(Y, targetPose.getY());
-                    double thetaOutput =Constants.Pose.SpeedReductionFactor* MaxAngularRate * thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
-                    
-                    if (m_ally.get() == Alliance.Blue){
-                        drivetrain.applyRequest(() -> 
-                            drive.withVelocityX(xOutput)
-                                 .withVelocityY(yOutput)
-                                 .withRotationalRate(thetaOutput)
-                        ).execute();
-                    } else {
-                        drivetrain.applyRequest(() -> 
-                        drive.withVelocityX(-xOutput)
-                                 .withVelocityY(-yOutput)
-                                 .withRotationalRate(thetaOutput)   
-                        ).execute();
-                    }
-                }
-            }
-    
-            @Override
-            public void end(boolean interrupted) {
-                xController.close();
-                yController.close();
-                thetaController.close();
-            }
-    
-            @Override
-            public boolean isFinished() {
-                return !lineup||
-                (xController.atSetpoint() && yController.atSetpoint() && thetaController.atSetpoint()||
-                (zeroed&&driver.axisMagnitudeGreaterThan(0, Constants.Drive.DriveDeadband).getAsBoolean()||driver.axisMagnitudeGreaterThan(1, Constants.Drive.DriveDeadband).getAsBoolean()||driver.axisMagnitudeGreaterThan(4, Constants.Drive.RotationDeadband).getAsBoolean()||driver.axisMagnitudeGreaterThan(5, Constants.Drive.RotationDeadband).getAsBoolean()));
-            }
-        };
-    }
-
-    
-        
-
-        
-
-        
-     private Command pathfindingtofollowCommand() {
-        // Since we are using a holonomic drivetrain, the rotation component of this pose
-        // represents the goal holonomic rotation
-        PathPlannerPath path = null;
-        try {
-            path = PathPlannerPath.fromPathFile("Testpath");
-        } catch (FileVersionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        // Create the constraints to use while pathfinding
-        PathConstraints constraints = new PathConstraints(
-                4.0, 4.0,
-                Units.degreesToRadians(540), Units.degreesToRadians(720));
-
-        // Since AutoBuilder is configured, we can use it to build pathfinding commands
-        return AutoBuilder.pathfindThenFollowPath(
-                path,
-                constraints
-                 
-        );
-    }
+   
 }
 //Abhi was here

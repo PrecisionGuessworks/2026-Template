@@ -70,11 +70,11 @@ import java.util.List;
              visionSim.addAprilTags(kTagLayout);
              // Create simulated camera properties. These can be set to mimic your actual camera.
              var cameraProp = new SimCameraProperties();
-             cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
+             cameraProp.setCalibration(1280, 800, Rotation2d.fromDegrees(90));
              cameraProp.setCalibError(0.35, 0.10);
-             cameraProp.setFPS(50);
-             cameraProp.setAvgLatencyMs(50);
-             cameraProp.setLatencyStdDevMs(15);
+             cameraProp.setFPS(60);
+             cameraProp.setAvgLatencyMs(25);
+             cameraProp.setLatencyStdDevMs(5);
              // Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
              // targets.
              cameraSim = new PhotonCameraSim(camera, cameraProp);

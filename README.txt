@@ -1,9 +1,12 @@
 TODO:
 
 - clean up
-- Find out why ratio in sim is not Right
+- Find out why ratio in sim is not right
+        Its close. Arm looks right, ele does not
+        
 - Try to fix magcoder in sim
 
+- PathPlanner is not in vendep but in java folder sooo yeah
 ------------------------------- Controller Layouts --------------------------------------
 
 Driver:

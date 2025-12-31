@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.quixlib.devices.QuixAbsoluteEncoder;
 import frc.quixlib.devices.QuixCANCoder;
 import frc.quixlib.motorcontrol.QuixTalonFX;
 import frc.quixlib.viz.Link2d;
@@ -37,6 +38,9 @@ public class ArmSubsystem extends SubsystemBase {
   static private final QuixCANCoder m_armCoder = 
       new QuixCANCoder(Constants.Arm.armCoderID, Constants.Arm.armMotorRatio, SensorDirectionValue.Clockwise_Positive);
   
+  // static private final QuixAbsoluteEncoder m_armCoder = 
+  //     new QuixAbsoluteEncoder(Constants.Arm.armCoderID, Constants.Arm.armMotorRatio, SensorDirectionValue.Clockwise_Positive);
+
       static double ArmStartingAngle = Constants.Arm.armStartingAngle;
      // : Units.rotationsToRadians(m_armCoder.getAbsPosition()); Constants.isSim ? 
   private final QuixTalonFX m_rollerMotor =
@@ -67,8 +71,8 @@ public class ArmSubsystem extends SubsystemBase {
 
               .setPIDConfig(Constants.Arm.armPositionPIDSlot, Constants.Arm.armPositionPIDConfig)
               .setBootPositionOffset(ArmStartingAngle)
-              .setReverseSoftLimit(Constants.Arm.armMinAngle)
-              .setForwardSoftLimit(Constants.Arm.armMaxAngle)
+              // .setReverseSoftLimit(Constants.Arm.armMinAngle)
+              // .setForwardSoftLimit(Constants.Arm.armMaxAngle)
               // .setFeedbackConfig(FeedbackSensorSourceValue.FusedCANcoder, 15, 0.0,Constants.Arm.armMotorRatio,Constants.Arm.armSensorRatio)
               );
 
