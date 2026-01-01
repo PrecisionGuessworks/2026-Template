@@ -75,14 +75,10 @@ public class DrivetrainExtra {
     
     public static Command pathfindingCommand(boolean left, boolean lineup) {
 
-        double X;
-        double Y;
-        double VX;
-        double VY;
-        double intercpet = Math.tan(Units.degreesToRadians(30)) * 4.5;
-        double intercpetRed = Math.tan(Units.degreesToRadians(30)) * 13;
-        double slope = Math.tan(Units.degreesToRadians(30));
-        Pose2d targetPose = Constants.Pose.Error; // Example target pose
+    double intercpet = Math.tan(Units.degreesToRadians(30))*4.5;
+    double intercpetRed = Math.tan(Units.degreesToRadians(30))*13;
+    double slope = Math.tan(Units.degreesToRadians(30));
+    Pose2d targetPose = Constants.Pose.Error; // Example target pose
         
         PIDController xController = new PIDController(Constants.Pose.PTranslationSlow, Constants.Pose.ITranslationSlow, Constants.Pose.DTranslationSlow);
         xController.setIntegratorRange(-Constants.Pose.SpeedReductionFactor, Constants.Pose.SpeedReductionFactor);
@@ -113,11 +109,11 @@ public class DrivetrainExtra {
                 }
                 if (lineup){
                     Pose2d currentPose = RobotContainer.drivetrain.getState().Pose;
-                    ChassisSpeeds currentSpeeds = RobotContainer.drivetrain.getState().Speeds;
-                    X = currentPose.getTranslation().getX();
-                    Y = currentPose.getTranslation().getY();
-                    VX = currentSpeeds.vxMetersPerSecond;
-                    VY = currentSpeeds.vyMetersPerSecond;
+                    // ChassisSpeeds currentSpeeds = RobotContainer.drivetrain.getState().Speeds;
+                    double X = currentPose.getTranslation().getX();
+                    double Y = currentPose.getTranslation().getY();
+                    // double VX = currentSpeeds.vxMetersPerSecond;
+                    // double VY = currentSpeeds.vyMetersPerSecond;
                     double xOutput =Constants.Pose.SpeedReductionFactor* RobotContainer.MaxSpeed * xController.calculate(X, targetPose.getX());
                     double yOutput =Constants.Pose.SpeedReductionFactor* RobotContainer.MaxSpeed * yController.calculate(Y, targetPose.getY());
                     double thetaOutput =Constants.Pose.SpeedReductionFactor* RobotContainer.MaxAngularRate * thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
