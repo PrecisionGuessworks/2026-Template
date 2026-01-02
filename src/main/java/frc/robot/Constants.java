@@ -49,6 +49,8 @@ public class Constants {
     public static boolean isSim =  false;// edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
     public static boolean ExtraInfo = true; // Turn on Extra network info, Just leave as true unless network is overloaded.
 
+    public static final boolean DogLogEnabled = true; // Set to true to enable DogLog telemetry
+    public static final boolean DogLogNetworkTables = true; // Set to true to enable DogLog over NetworkTables
 
     public static class Drive { 
         //Drive Constants that are not in TunerConstants / Gnenerated

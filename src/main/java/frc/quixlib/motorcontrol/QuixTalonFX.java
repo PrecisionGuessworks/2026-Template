@@ -21,6 +21,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.ImmutableAngle;
@@ -58,14 +60,14 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
   private final QuixStatusSignal m_closedLoopReferenceSignal;
   private final QuixStatusSignal m_closedLoopReferenceSlopeSignal;
 
-  private final DoublePublisher m_percentOutputPublisher;
-  private final DoublePublisher m_supplyCurrentPublisher;
-  private final DoublePublisher m_statorCurrentPublisher;
-  private final DoublePublisher m_closedLoopReferencePublisher;
-  private final DoublePublisher m_closedLoopReferenceSlopePublisher;
-  private final DoublePublisher m_rawRotorPositionPublisher;
-  private final DoublePublisher m_sensorPositionPublisher;
-  private final DoublePublisher m_sensorVelocityPublisher;
+  // private final DoublePublisher m_percentOutputPublisher;
+  // private final DoublePublisher m_supplyCurrentPublisher;
+  // private final DoublePublisher m_statorCurrentPublisher;
+  // private final DoublePublisher m_closedLoopReferencePublisher;
+  // private final DoublePublisher m_closedLoopReferenceSlopePublisher;
+  // private final DoublePublisher m_rawRotorPositionPublisher;
+  // private final DoublePublisher m_sensorPositionPublisher;
+  // private final DoublePublisher m_sensorVelocityPublisher;
 
   public static class QuixTalonFXConfiguration {
     private NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -273,42 +275,41 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
     // Clear reset flag.
     m_controller.hasResetOccurred();
 
-    SmartDashboard.putBoolean("TalonFX Configuration " + m_canID.toString(), setConfiguration());
-
-    // Set up logging.
+    // SmartDashboard.putBoolean("TalonFX Configuration " + m_canID.toString(), );
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Configuration",setConfiguration());
     
-    m_percentOutputPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Percent Output")
-            .publish();
-    m_supplyCurrentPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Supply Current")
-            .publish();
-    m_statorCurrentPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Stator Current")
-            .publish();
-    m_closedLoopReferencePublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Closed Loop Reference")
-            .publish();
-    m_closedLoopReferenceSlopePublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Closed Loop Reference Slope")
-            .publish();
-    m_rawRotorPositionPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Raw Rotor Position")
-            .publish();
-    m_sensorPositionPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Sensor Position")
-            .publish();
-    m_sensorVelocityPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("TalonFX " + m_canID + ": Sensor Velocity")
-            .publish();
+    // m_percentOutputPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Percent Output")
+    //         .publish();
+    // m_supplyCurrentPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Supply Current")
+    //         .publish();
+    // m_statorCurrentPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Stator Current")
+    //         .publish();
+    // m_closedLoopReferencePublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Closed Loop Reference")
+    //         .publish();
+    // m_closedLoopReferenceSlopePublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Closed Loop Reference Slope")
+    //         .publish();
+    // m_rawRotorPositionPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Raw Rotor Position")
+    //         .publish();
+    // m_sensorPositionPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Sensor Position")
+    //         .publish();
+    // m_sensorVelocityPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("TalonFX " + m_canID + ": Sensor Velocity")
+    //         .publish();
   }
 
   public boolean setConfiguration() {
@@ -328,30 +329,31 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
             "TalonFX " + m_canID + ": applyConfiguration");
 
     // Set update frequencies.
+    final double UpdateFreq = 100.0;
     allSuccess &=
         PhoenixUtil.retryUntilSuccess(
-            () -> m_percentOutputSignal.setUpdateFrequency(100.0, kCANTimeoutS),
-            () -> m_percentOutputSignal.getAppliedUpdateFrequency() == 100.0,
+            () -> m_percentOutputSignal.setUpdateFrequency(UpdateFreq, kCANTimeoutS),
+            () -> m_percentOutputSignal.getAppliedUpdateFrequency() == UpdateFreq,
             "TalonFX " + m_canID + ": m_percentOutputSignal.setUpdateFrequency()");
     allSuccess &=
         PhoenixUtil.retryUntilSuccess(
-            () -> m_sensorPositionSignal.setUpdateFrequency(100.0, kCANTimeoutS),
-            () -> m_sensorPositionSignal.getAppliedUpdateFrequency() == 100.0,
+            () -> m_sensorPositionSignal.setUpdateFrequency(UpdateFreq, kCANTimeoutS),
+            () -> m_sensorPositionSignal.getAppliedUpdateFrequency() == UpdateFreq,
             "TalonFX " + m_canID + ": m_sensorPositionSignal.setUpdateFrequency()");
     allSuccess &=
         PhoenixUtil.retryUntilSuccess(
-            () -> m_sensorVelocitySignal.setUpdateFrequency(100.0, kCANTimeoutS),
-            () -> m_sensorVelocitySignal.getAppliedUpdateFrequency() == 100.0,
+            () -> m_sensorVelocitySignal.setUpdateFrequency(UpdateFreq, kCANTimeoutS),
+            () -> m_sensorVelocitySignal.getAppliedUpdateFrequency() == UpdateFreq,
             "TalonFX " + m_canID + ": m_sensorVelocitySignal.setUpdateFrequency()");
     allSuccess &=
         PhoenixUtil.retryUntilSuccess(
-            () -> m_closedLoopReferenceSignal.setUpdateFrequency(100.0, kCANTimeoutS),
-            () -> m_closedLoopReferenceSignal.getAppliedUpdateFrequency() == 100.0,
+            () -> m_closedLoopReferenceSignal.setUpdateFrequency(UpdateFreq, kCANTimeoutS),
+            () -> m_closedLoopReferenceSignal.getAppliedUpdateFrequency() == UpdateFreq,
             "TalonFX " + m_canID + ": m_closedLoopReferenceSignal.setUpdateFrequency()");
     allSuccess &=
         PhoenixUtil.retryUntilSuccess(
-            () -> m_closedLoopReferenceSlopeSignal.setUpdateFrequency(100.0, kCANTimeoutS),
-            () -> m_closedLoopReferenceSlopeSignal.getAppliedUpdateFrequency() == 100.0,
+            () -> m_closedLoopReferenceSlopeSignal.setUpdateFrequency(UpdateFreq, kCANTimeoutS),
+            () -> m_closedLoopReferenceSlopeSignal.getAppliedUpdateFrequency() == UpdateFreq,
             "TalonFX " + m_canID + ": m_closedLoopReferenceSlopeSignal.setUpdateFrequency()");
 
     // Disable all signals that have not been explicitly defined.
@@ -409,14 +411,23 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
   }
 
   public void logMotorState() {
-    m_percentOutputPublisher.set(getPercentOutput());
-    m_supplyCurrentPublisher.set(getSupplyCurrent());
-    m_statorCurrentPublisher.set(getStatorCurrent());
-    m_closedLoopReferencePublisher.set(getClosedLoopReference());
-    m_closedLoopReferenceSlopePublisher.set(getClosedLoopReferenceSlope());
-    m_rawRotorPositionPublisher.set(m_controller.getRotorPosition().getValueAsDouble());
-    m_sensorPositionPublisher.set(getSensorPosition());
-    m_sensorVelocityPublisher.set(getSensorVelocity());
+    // m_percentOutputPublisher.set(getPercentOutput());
+    // m_supplyCurrentPublisher.set(getSupplyCurrent());
+    // m_statorCurrentPublisher.set(getStatorCurrent());
+    // m_closedLoopReferencePublisher.set(getClosedLoopReference());
+    // m_closedLoopReferenceSlopePublisher.set(getClosedLoopReferenceSlope());
+    // m_rawRotorPositionPublisher.set(m_controller.getRotorPosition().getValueAsDouble());
+    // m_sensorPositionPublisher.set(getSensorPosition());
+    // m_sensorVelocityPublisher.set(getSensorVelocity());
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Percent Output", getPercentOutput());
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Supply Current", getSupplyCurrent(),"Amps");
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Stator Current", getStatorCurrent(),"Amps");
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Closed Loop Reference", getClosedLoopReference(),"Rad");
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Closed Loop Reference Slope", getClosedLoopReferenceSlope(),"rad per sec");
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Raw Rotor Position", m_controller.getRotorPosition().getValueAsDouble(),"Radi");
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Sensor Position", getSensorPosition(),"rad");
+    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Sensor Velocity", getSensorVelocity(),"rad per sec");
+
   }
 
   public void setBrakeMode(final boolean on) {

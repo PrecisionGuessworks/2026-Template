@@ -7,6 +7,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.quixlib.motorcontrol.MechanismRatio;
 import frc.quixlib.phoenix.PhoenixUtil;
@@ -29,9 +31,9 @@ public class QuixCANCoder implements QuixAbsoluteEncoder {
   private final QuixStatusSignal m_absolutePositionSignal;
   private final QuixStatusSignal m_velocitySignal;
 
-  private final DoublePublisher m_positionPublisher;
-  private final DoublePublisher m_absolutePositionPublisher;
-  private final DoublePublisher m_velocityPublisher;
+  // private final DoublePublisher m_positionPublisher;
+  // private final DoublePublisher m_absolutePositionPublisher;
+  // private final DoublePublisher m_velocityPublisher;
 
 
   public QuixCANCoder(final CANDeviceID canID, final MechanismRatio ratio, final SensorDirectionValue direction) {
@@ -51,28 +53,32 @@ public class QuixCANCoder implements QuixAbsoluteEncoder {
     // Clear reset flag.
     m_cancoder.hasResetOccurred();
 
-    SmartDashboard.putBoolean("CANCoder Configuration " + m_canID.toString(), setConfiguration());
-    
-    m_positionPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("CanCoder " + m_canID + ": Sensor Position")
-            .publish();
-    m_absolutePositionPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("CanCoder " + m_canID + ": Absolute Position")
-            .publish();
-    m_velocityPublisher =
-        NetworkTableInstance.getDefault()
-            .getDoubleTopic("CanCoder " + m_canID + ": Velocity")
-            .publish();
+    // SmartDashboard.putBoolean("CanCoder " + m_canID.deviceNumber + ": Configuration", setConfiguration());
+    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Configuration", setConfiguration());
+    // m_positionPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("CanCoder " + m_canID + ": Sensor Position")
+    //         .publish();
+    // m_absolutePositionPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("CanCoder " + m_canID + ": Absolute Position")
+    //         .publish();
+    // m_velocityPublisher =
+    //     NetworkTableInstance.getDefault()
+    //         .getDoubleTopic("CanCoder " + m_canID + ": Velocity")
+    //         .publish();
+            
   
 
   }
 
   public void logSensorState() {
-    m_positionPublisher.set(getPosition());
-    m_absolutePositionPublisher.set(getAbsPosition());
-    m_velocityPublisher.set(getVelocity());
+    // m_positionPublisher.set(getPosition());
+    // m_absolutePositionPublisher.set(getAbsPosition());
+    // m_velocityPublisher.set(getVelocity());
+    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Sensor Position", getPosition(),"rad");
+    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Absolute Position", getAbsPosition(),"rad");
+    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Velocity", getVelocity(),"rad per sec" );
 
 
   }

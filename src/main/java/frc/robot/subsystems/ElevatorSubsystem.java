@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import dev.doglog.DogLog;
+import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -172,15 +174,20 @@ public boolean getElevatorOn(){
     
     SmartDashboard.putBoolean(
           "Elevator", !m_ElevatorOff);
+      DogLog.log("Elevator: On", !m_ElevatorOff);
           
-          if(Constants.ExtraInfo){
-    SmartDashboard.putNumber(
-        "Elevator: Current Height (in)", Units.metersToInches(getHeight()));
-    SmartDashboard.putNumber(
-        "Elevator: Target Height (in)", Units.metersToInches(Constants.Elevator.motorRatio.sensorRadiansToMechanismPosition(m_motor.getClosedLoopReference())));
-        SmartDashboard.putNumber(
-          "Elevator: Target set Height (in)",
-          Units.metersToInches(m_targetHeight));      
+      if(Constants.ExtraInfo){
+    // SmartDashboard.putNumber(
+    //     "Elevator: Current Height (in)", Units.metersToInches(getHeight()));
+    DogLog.log("Elevator: Height", Units.metersToInches(getHeight()),"Inch");
+    // SmartDashboard.putNumber(
+    //     "Elevator: Target Height (in)", Units.metersToInches(Constants.Elevator.motorRatio.sensorRadiansToMechanismPosition(m_motor.getClosedLoopReference())));
+    DogLog.log("Elevator: Target Height", Units.metersToInches(Constants.Elevator.motorRatio.sensorRadiansToMechanismPosition(m_motor.getClosedLoopReference())),"Inchs");
+        // SmartDashboard.putNumber(
+        //   "Elevator: Target set Height (in)",
+        //   Units.metersToInches(m_targetHeight)); 
+    DogLog.log("Elevator: Target set Height", Units.metersToInches(m_targetHeight),"In");
+    
       }
     SmartDashboard.putBoolean(
           "L1", Loc1);

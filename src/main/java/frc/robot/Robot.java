@@ -11,6 +11,9 @@ import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
+
+import dev.doglog.DogLog;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,7 +28,6 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
@@ -71,20 +73,6 @@ public class Robot extends TimedRobot {
   Optional<Alliance> ally = DriverStation.getAlliance();
   Optional<Alliance> newAlly;
   private Vision vision;
-
-  StructPublisher<Pose3d> elevatorCarriagepublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("elevatorCarriage", Pose3d.struct).publish();
-  StructPublisher<Pose3d> Zeropublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("Zeropublisher", Pose3d.struct).publish();
-  StructPublisher<Pose3d> Stage1publisher = NetworkTableInstance.getDefault()
-        .getStructTopic("Stage1", Pose3d.struct).publish();
-  StructPublisher<Pose3d> Armpublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("ArmViz", Pose3d.struct).publish();
-  StructPublisher<Pose3d> Wristpublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("WristViz", Pose3d.struct).publish();
-
-  StructPublisher<Pose3d> Coralpublisher = NetworkTableInstance.getDefault()
-        .getStructTopic("CoralViz", Pose3d.struct).publish();
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -160,10 +148,6 @@ public class Robot extends TimedRobot {
     }
   }
   
-
-
-
-if (!isReal()){
   // 3d viz
   final double stage1Height = Constants.Viz3d.stage1Height;
   final double CarrageHeight = RobotContainer.elevator.getHeight();
@@ -175,26 +159,24 @@ if (!isReal()){
             new Transform3d(0, 0, CarrageHeight+ Units.inchesToMeters(0.5), new Rotation3d()));
   final Pose3d armViz = elevatorCarriage.transformBy(
     new Transform3d(0, 0, Units.inchesToMeters(7.7), new Rotation3d(0,Units.degreesToRadians( -RobotContainer.arm.getArmAngle()+90),0)));
-    final Pose3d wristViz = armViz.transformBy(
+  final Pose3d wristViz = armViz.transformBy(
     new Transform3d(0, 0, Units.inchesToMeters(11), new Rotation3d(0,Units.degreesToRadians( -RobotContainer.arm.getWristAngle()+90),0)));
-    Pose3d coralViz = new Pose3d(0,0,-1, new Rotation3d());
+  Pose3d coralViz = new Pose3d(0,0,-1, new Rotation3d());
     if (RobotContainer.arm.getHasPiece()) {
-    Pose3d drive3d = new Pose3d(RobotContainer.drivetrain.getState().Pose);
-    Pose3d temPose3d = wristViz.transformBy(
+  Pose3d drive3d = new Pose3d(RobotContainer.drivetrain.getState().Pose);
+  Pose3d temPose3d = wristViz.transformBy(
       new Transform3d(Units.inchesToMeters(-3), Units.inchesToMeters(2.4), Units.inchesToMeters(8), new Rotation3d(0,Units.degreesToRadians( 90),0)));
     coralViz = drive3d.transformBy(
       new Transform3d(temPose3d.getTranslation(), temPose3d.getRotation()));
     
     }
-   
-        
-        elevatorCarriagepublisher.set(elevatorCarriage);
-        Zeropublisher.set(new Pose3d());
-        Stage1publisher.set(stageOne);
-        Armpublisher.set(armViz);
-        Wristpublisher.set(wristViz);
-        Coralpublisher.set(coralViz);
-}
+    DogLog.log("3DViz: 1DriveBase", RobotContainer.drivetrain.getState().Pose);     
+    DogLog.log("3DViz: Zeropublisher", new Pose3d());
+    DogLog.log("3DViz: 3ElevatorCarriage", elevatorCarriage);
+    DogLog.log("3DViz: 2Stage1", stageOne);
+    DogLog.log("3DViz: 4ArmViz", armViz);
+    DogLog.log("3DViz: 5WristViz", wristViz);
+    DogLog.log("3DViz: CoralViz", coralViz);
 
 }
 

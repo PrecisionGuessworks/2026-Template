@@ -54,6 +54,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DrivetrainExtra;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
+
 public class RobotContainer {
     public static double MaxSpeed = MaxSpeedPercentage*(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
     public static double MaxAngularRate = RotationsPerSecond.of(MaxAngularRatePercentage).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -61,7 +64,7 @@ public class RobotContainer {
     public static final CommandXboxController driver = new CommandXboxController(0);
     public static final CommandXboxController operator = new CommandXboxController(1);
 
-    private final Telemetry logger = new Telemetry(MaxSpeed);
+    // private final Telemetry logger = new Telemetry(MaxSpeed);
 
     // public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain(TunerConstants.DrivetrainConstants,250, Constants.Vision.ODOM_STD_DEV, Constants.Vision.kSingleTagStdDevs, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
@@ -158,10 +161,17 @@ ArmWristViz.addLink(
 
 
     public RobotContainer() {
-        // Starts recording to data log
-        DataLogManager.start();
-        // Record both DS control and joystick data
-        DriverStation.startDataLog(DataLogManager.getLog());
+        // // Starts recording to data log
+        // DataLogManager.start();
+        // // Record both DS control and joystick data
+        // DriverStation.startDataLog(DataLogManager.getLog());
+
+        DogLog.setOptions(new DogLogOptions().withNtPublish(Constants.DogLogNetworkTables));
+        DogLog.setOptions(new DogLogOptions().withNtTunables(Constants.DogLogNetworkTables));
+        DogLog.setOptions(new DogLogOptions().withCaptureDs(Constants.DogLogNetworkTables));
+        DogLog.setOptions(new DogLogOptions().withCaptureConsole(true));
+        DogLog.setOptions(new DogLogOptions().withLogExtras(true));
+        // DogLog.setEnabled(Constants.DogLogEnabled);
 
         //robotCommands.put("IntakePiece", new IntakeAlgae(intake,1).withTimeout(2.5));
         robotCommands.put("CoralMoveScore", new CoralMoveScore(elevator, arm));
@@ -196,7 +206,7 @@ ArmWristViz.addLink(
           SmartDashboard.putNumber("Voltage",RobotController.getBatteryVoltage());
           SmartDashboard.putNumber("CAN",RobotController.getCANStatus().percentBusUtilization * 100.0);
           SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-        SmartDashboard.putData("Power Distribution Panel", powerDistribution);
+        DogLog.setPdh(powerDistribution);
           }
 
         //PathfindingCommand.warmupCommand().ignoringDisable(true).schedule();;
