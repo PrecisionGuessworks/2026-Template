@@ -96,64 +96,11 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
 
 
 
-private static  final Viz2d robotViz =
-      new Viz2d("Robot Viz", Units.inchesToMeters(80.0), Units.inchesToMeters(120.0), 1.0);
-
-private static  final Link2d chassisViz =
-      robotViz.addLink(
-          new Link2d(
-              robotViz,
-              "Chassis",
-              Units.inchesToMeters(29.0),
-              30.0,
-              new Color("#FAB604"),
-              new Transform2d(Constants.Viz.xOffset, Units.inchesToMeters(3.0), new Rotation2d())));
-
-  // Elevator viz
-  private  static final Link2d elevatorFrameViz =
-      robotViz.addLink(
-          new Link2d(
-              robotViz,
-              "Elevator Base",
-              Constants.Viz.elevatorBaseLength,
-              4.0,
-              Color.kGreen,
-              new Transform2d(
-                  Constants.Viz.elevatorBaseX,
-                  Constants.Viz.elevatorBaseY,
-                  Constants.Viz.elevatorAngle)));
-  private static  final Link2d elevatorCarriageViz =
-      elevatorFrameViz.addLink(
-          new Link2d(
-              robotViz,
-              "Elevator Carriage",
-              Constants.Viz.elevatorCarriageLength,
-              6.0,
-              Color.kLightGreen));
-// Intake viz
-// private static final Link2d intakeArmViz =
-// robotViz.addLink(
-//     new Link2d(robotViz, "Intake Arm", Constants.Viz.intakeArmLength, 10.0, Color.kBlue));
-// private static final Link2d intakeRollerViz =
-// intakeArmViz.addLink(
-//     new Link2d(robotViz, "Intake Roller", Units.inchesToMeters(1.0), 10.0, Color.kLightBlue));
 
 
-private static final Link2d ArmArmViz =
-elevatorCarriageViz.addLink(
-        new Link2d(robotViz, "Arm Arm", Constants.Viz.ArmArmLength, 10, Color.kRed));
-private static final Link2d ArmWristViz =
-ArmArmViz.addLink(
-        new Link2d(robotViz, "Arm Wrist", Constants.Viz.ArmWristLength, 10, Color.kOrange));
-private static final Link2d ArmWheelViz =
-ArmWristViz.addLink(
-        new Link2d(robotViz, "Arm Wheel", Units.inchesToMeters(2.0), 10, Color.kCoral));
-
-
-
-        public static final ElevatorSubsystem elevator = new ElevatorSubsystem(elevatorCarriageViz);
-        //public static final IntakeSubsystem intake = new IntakeSubsystem(intakeArmViz, intakeRollerViz);
-        public static final ArmSubsystem arm = new ArmSubsystem(ArmArmViz,ArmWristViz,ArmWheelViz);
+        public static final ElevatorSubsystem elevator = new ElevatorSubsystem();
+        //public static final IntakeSubsystem intake = new IntakeSubsystem();
+        public static final ArmSubsystem arm = new ArmSubsystem();
 
 
 

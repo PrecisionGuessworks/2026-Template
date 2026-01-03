@@ -1,22 +1,15 @@
 package frc.quixlib.devices;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.quixlib.motorcontrol.MechanismRatio;
-import frc.quixlib.phoenix.PhoenixUtil;
-import frc.robot.Constants;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.ImmutableAngle;
 import edu.wpi.first.units.measure.ImmutableAngularVelocity;
+import frc.quixlib.motorcontrol.MechanismRatio;
+import frc.quixlib.phoenix.PhoenixUtil;
 
 
 public class QuixCANCoder implements QuixAbsoluteEncoder {
@@ -54,7 +47,7 @@ public class QuixCANCoder implements QuixAbsoluteEncoder {
     m_cancoder.hasResetOccurred();
 
     // SmartDashboard.putBoolean("CanCoder " + m_canID.deviceNumber + ": Configuration", setConfiguration());
-    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Configuration", setConfiguration());
+    DogLog.log("Hardware: CANCoder " + m_canID.deviceNumber + ": Configuration", setConfiguration());
     // m_positionPublisher =
     //     NetworkTableInstance.getDefault()
     //         .getDoubleTopic("CanCoder " + m_canID + ": Sensor Position")
@@ -76,9 +69,9 @@ public class QuixCANCoder implements QuixAbsoluteEncoder {
     // m_positionPublisher.set(getPosition());
     // m_absolutePositionPublisher.set(getAbsPosition());
     // m_velocityPublisher.set(getVelocity());
-    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Sensor Position", getPosition(),"rad");
-    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Absolute Position", getAbsPosition(),"rad");
-    DogLog.log("CANCoder " + m_canID.deviceNumber + ": Velocity", getVelocity(),"rad per sec" );
+    DogLog.log("Hardware: CANCoder " + m_canID.deviceNumber + ": Sensor Position", getPosition(),"rad");
+    DogLog.log("Hardware: CANCoder " + m_canID.deviceNumber + ": Absolute Position", getAbsPosition(),"rad");
+    DogLog.log("Hardware: CANCoder " + m_canID.deviceNumber + ": Velocity", getVelocity(),"rad per sec" );
 
 
   }

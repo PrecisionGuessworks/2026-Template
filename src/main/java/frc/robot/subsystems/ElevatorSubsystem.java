@@ -63,12 +63,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   private boolean m_ElevatorOff = false;
   private boolean m_ElevatorOffLast = m_ElevatorOff;
 
-  public ElevatorSubsystem(Link2d elevatorCarriageViz) {
+  public ElevatorSubsystem() {
     // Show scheduler status in SmartDashboard.
     SmartDashboard.putData(this);
 
-    // Setup viz.
-    m_elevatorCarriageViz = elevatorCarriageViz;
   }
 
   public boolean isAtScore(){
@@ -215,8 +213,6 @@ public boolean getElevatorOn(){
           true,
           0);
 
-  // Visualization
-  private final Link2d m_elevatorCarriageViz;
 
   @Override
   public void simulationPeriodic() {
@@ -230,9 +226,6 @@ public boolean getElevatorOn(){
         TimedRobot.kDefaultPeriod,
         Constants.Elevator.motorRatio);
 
-    // Update carriage viz.
-    m_elevatorCarriageViz.setRelativeTransform(
-        new Transform2d(m_elevatorSim.getPositionMeters(), 0.0, new Rotation2d()));
   }
   // --- END STUFF FOR SIMULATION ---
 }

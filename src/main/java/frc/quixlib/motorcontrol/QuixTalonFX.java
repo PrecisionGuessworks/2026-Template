@@ -1,6 +1,8 @@
 package frc.quixlib.motorcontrol;
 
 
+import java.util.function.Function;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
@@ -23,17 +25,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.ImmutableAngle;
 import edu.wpi.first.units.measure.ImmutableAngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.quixlib.devices.CANDeviceID;
 import frc.quixlib.devices.QuixStatusSignal;
 import frc.quixlib.phoenix.PhoenixUtil;
 import frc.robot.Robot;
-import java.util.function.Function;
 
 public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseable {
   private static final double kCANTimeoutS = 0.1; // s
@@ -276,7 +274,7 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
     m_controller.hasResetOccurred();
 
     // SmartDashboard.putBoolean("TalonFX Configuration " + m_canID.toString(), );
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Configuration",setConfiguration());
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Configuration",setConfiguration());
     
     // m_percentOutputPublisher =
     //     NetworkTableInstance.getDefault()
@@ -419,14 +417,14 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
     // m_rawRotorPositionPublisher.set(m_controller.getRotorPosition().getValueAsDouble());
     // m_sensorPositionPublisher.set(getSensorPosition());
     // m_sensorVelocityPublisher.set(getSensorVelocity());
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Percent Output", getPercentOutput());
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Supply Current", getSupplyCurrent(),"Amps");
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Stator Current", getStatorCurrent(),"Amps");
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Closed Loop Reference", getClosedLoopReference(),"Rad");
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Closed Loop Reference Slope", getClosedLoopReferenceSlope(),"rad per sec");
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Raw Rotor Position", m_controller.getRotorPosition().getValueAsDouble(),"Radi");
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Sensor Position", getSensorPosition(),"rad");
-    DogLog.log("TalonFX " + m_canID.deviceNumber + ": Sensor Velocity", getSensorVelocity(),"rad per sec");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Percent Output", getPercentOutput());
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Supply Current", getSupplyCurrent(),"Amps");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Stator Current", getStatorCurrent(),"Amps");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Closed Loop Reference", getClosedLoopReference(),"Rad");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Closed Loop Reference Slope", getClosedLoopReferenceSlope(),"rad per sec");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Raw Rotor Position", m_controller.getRotorPosition().getValueAsDouble(),"Radi");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Sensor Position", getSensorPosition(),"rad");
+    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Sensor Velocity", getSensorVelocity(),"rad per sec");
 
   }
 

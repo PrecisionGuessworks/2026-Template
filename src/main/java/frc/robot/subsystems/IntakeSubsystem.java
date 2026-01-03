@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -70,16 +69,12 @@ public class IntakeSubsystem extends SubsystemBase {
   private Timer m_lastPieceTimer = new Timer();
   public boolean m_hasPiece = false;
 
-  public IntakeSubsystem(Link2d intakeArmViz, Link2d intakeRollerViz) {
+  public IntakeSubsystem() {
     m_lastPieceTimer.start();
     m_lastPieceTimer.reset();
 
     // Show scheduler status in SmartDashboard.
     SmartDashboard.putData(this);
-
-    // Setup viz.
-    m_intakeArmViz = intakeArmViz;
-    m_intakeRollerViz = intakeRollerViz;
   }
 
   public boolean hasPiece() {
@@ -141,25 +136,25 @@ public class IntakeSubsystem extends SubsystemBase {
       m_lastPieceTimer.reset();
     }
 
-    SmartDashboard.putBoolean("Intake: Beam Break", m_beamBreak.get());
-    SmartDashboard.putBoolean("Intake: Has Piece", hasPiece());
+    // SmartDashboard.putBoolean("Intake: Beam Break", m_beamBreak.get());
+    // SmartDashboard.putBoolean("Intake: Has Piece", hasPiece());
 
     m_deployMotor.setMotionMagicPositionSetpoint(
         Constants.Intake.deployPositionSlot, m_targetAngle);
 
-    SmartDashboard.putNumber(
-        "Intake: Current Angle (deg)", Units.radiansToDegrees(m_deployMotor.getSensorPosition()));
-    SmartDashboard.putNumber(
-        "Intake: Target Angle (deg)",
-        Units.radiansToDegrees(m_deployMotor.getClosedLoopReference()));
-    SmartDashboard.putNumber(
-        "Intake: Current Velocity (deg per sec)",
-        Units.radiansToDegrees(m_deployMotor.getSensorVelocity()));
-    SmartDashboard.putNumber(
-        "Intake: Target Velocity (deg per sec)",
-        Units.radiansToDegrees(m_deployMotor.getClosedLoopReferenceSlope()));
-    SmartDashboard.putNumber(
-        "Intake: Current Roller Velocity (rad per sec)", m_rollerMotor.getSensorVelocity());
+    // SmartDashboard.putNumber(
+    //     "Intake: Current Angle (deg)", Units.radiansToDegrees(m_deployMotor.getSensorPosition()));
+    // SmartDashboard.putNumber(
+    //     "Intake: Target Angle (deg)",
+    //     Units.radiansToDegrees(m_deployMotor.getClosedLoopReference()));
+    // SmartDashboard.putNumber(
+    //     "Intake: Current Velocity (deg per sec)",
+    //     Units.radiansToDegrees(m_deployMotor.getSensorVelocity()));
+    // SmartDashboard.putNumber(
+    //     "Intake: Target Velocity (deg per sec)",
+    //     Units.radiansToDegrees(m_deployMotor.getClosedLoopReferenceSlope()));
+    // SmartDashboard.putNumber(
+    //     "Intake: Current Roller Velocity (rad per sec)", m_rollerMotor.getSensorVelocity());
 
     m_rollerMotor.logMotorState();
     m_deployMotor.logMotorState();
@@ -186,11 +181,6 @@ public class IntakeSubsystem extends SubsystemBase {
               Constants.Intake.rollerMotorRatio.reduction()),
           m_simMotor);
 
-          
-  // Visualization
-  private final Link2d m_intakeArmViz;
-  private final Link2d m_intakeRollerViz;
-
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
@@ -210,20 +200,7 @@ public class IntakeSubsystem extends SubsystemBase {
         TimedRobot.kDefaultPeriod,
         Constants.Intake.deployMotorRatio);
 
-    // Update arm viz.
-    m_intakeArmViz.setRelativeTransform(
-        new Transform2d(
-            Constants.Viz.intakePivotX,
-            Constants.Viz.intakePivotY,
-            Rotation2d.fromRadians(m_armSim.getAngleRads())));
-    m_intakeRollerViz.setRelativeTransform(
-        new Transform2d(
-            Constants.Viz.intakeArmLength,
-            0.0,
-            Rotation2d.fromRadians(
-                m_intakeRollerViz.getRelativeTransform().getRotation().getRadians()
-                    + m_rollerSim.getAngularVelocityRadPerSec()
-                        * Constants.Viz.angularVelocityScalar)));
+
   }
   // --- END STUFF FOR SIMULATION ---
 }

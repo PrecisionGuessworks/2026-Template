@@ -5,6 +5,7 @@ import static frc.robot.Constants.Vision.*;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -21,6 +22,8 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
+
+import dev.doglog.DogLog;
  
 public class Vision {
      private final PhotonCamera camera;
@@ -37,7 +40,7 @@ public class Vision {
          photonEstimator =
                  new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
          photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
- 
+      
          // ----- Simulation
          if (Robot.isSimulation()) {
              // Create the vision system simulation which handles cameras and targets on the field.
@@ -98,6 +101,8 @@ public class Vision {
       * @param estimatedPose The estimated pose to guess standard deviations for.
       * @param targets All targets in this camera frame
       */
+    // private Pose2d[] Visabletags = new Pose2d[kTagLayout.getTags().size()+1];
+    
      private void updateEstimationStdDevs(
              Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
          if (estimatedPose.isEmpty()) {
@@ -113,6 +118,8 @@ public class Vision {
              // Precalculation - see how many tags we found, and calculate an average-distance metric
              for (var tgt : targets) {
                  var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+                // Visabletags[tgt.getFiducialId()] = tagPose.get().toPose2d();
+                //  System.out.println("Vision: Tags Size "+Visabletags.length);
                  if (tagPose.isEmpty()) continue;
                  numTags++;
                  avgDist +=
@@ -122,7 +129,11 @@ public class Vision {
                                  .getTranslation()
                                  .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
              }
- 
+            DogLog.log("Vision: NumTags", numTags);
+            DogLog.log("Vision: AvgDist", avgDist/numTags,"m");
+            DogLog.log("Vision: EstPose", estimatedPose.get().estimatedPose.toPose2d());
+            // DogLog.log("Vision: VisTargets", new Pose3d());
+            
              if (numTags == 0) {
                  // No tags visible. Default to single-tag std devs
                  curStdDevs = kSingleTagStdDevs;
