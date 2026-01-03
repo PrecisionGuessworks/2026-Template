@@ -31,6 +31,7 @@ public class ArmSubsystem extends SubsystemBase {
   //     new QuixAbsoluteEncoder(Constants.Arm.armCoderID, Constants.Arm.armMotorRatio, SensorDirectionValue.Clockwise_Positive);
 
       static double ArmStartingAngle = Constants.Arm.armStartingAngle;
+      public double RollerTargetVelocity = 0.0;
      // : Units.rotationsToRadians(m_armCoder.getAbsPosition()); Constants.isSim ? 
   private final QuixTalonFX m_rollerMotor =
       new QuixTalonFX(
@@ -153,6 +154,7 @@ private final QuixTalonFX m_wristMotor =
   }
 
   public void setRollerVelocity(double velocity) {
+    RollerTargetVelocity = velocity;
     if (velocity == 0.0) {
       m_rollerMotor.setPercentOutput(0.0);
     } else {

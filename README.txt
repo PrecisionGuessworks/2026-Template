@@ -35,3 +35,7 @@ Left Stick:
 Right Stick:
 
 D-Pad:
+
+Left Back Button:
+Right Back Button:
+

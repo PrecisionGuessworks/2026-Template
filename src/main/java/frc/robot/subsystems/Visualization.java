@@ -17,85 +17,49 @@ public class Visualization {
 
 
 
-// private static  final Viz2d robotViz =
-//       new Viz2d("Robot Viz", Units.inchesToMeters(80.0), Units.inchesToMeters(120.0), 1.0);
+private static  final Viz2d robotViz =
+      new Viz2d("Robot Viz", Units.inchesToMeters(80.0), Units.inchesToMeters(120.0), 1.0);
 
-// private static  final Link2d chassisViz =
-//       robotViz.addLink(
-//           new Link2d(
-//               robotViz,
-//               "Chassis",
-//               Units.inchesToMeters(29.0),
-//               30.0,
-//               new Color("#FAB604"),
-//               new Transform2d(Constants.Viz.xOffset, Units.inchesToMeters(3.0), new Rotation2d())));
+private static  final Link2d chassisViz =
+      robotViz.addLink(
+          new Link2d(
+              robotViz,
+              "Chassis",
+              Units.inchesToMeters(29.0),
+              30.0,
+              new Color("#FAB604"),
+              new Transform2d(Constants.Viz.xOffset, Units.inchesToMeters(3.0), new Rotation2d())));
 
-//   // Elevator viz
-//   private  static final Link2d elevatorFrameViz =
-//       robotViz.addLink(
-//           new Link2d(
-//               robotViz,
-//               "Elevator Base",
-//               Constants.Viz.elevatorBaseLength,
-//               4.0,
-//               Color.kGreen,
-//               new Transform2d(
-//                   Constants.Viz.elevatorBaseX,
-//                   Constants.Viz.elevatorBaseY,
-//                   Constants.Viz.elevatorAngle)));
-//   private static  final Link2d elevatorCarriageViz =
-//       elevatorFrameViz.addLink(
-//           new Link2d(
-//               robotViz,
-//               "Elevator Carriage",
-//               Constants.Viz.elevatorCarriageLength,
-//               6.0,
-//               Color.kLightGreen));
-// // Intake viz
-// // private static final Link2d intakeArmViz =
-// // robotViz.addLink(
-// //     new Link2d(robotViz, "Intake Arm", Constants.Viz.intakeArmLength, 10.0, Color.kBlue));
-// // private static final Link2d intakeRollerViz =
-// // intakeArmViz.addLink(
-// //     new Link2d(robotViz, "Intake Roller", Units.inchesToMeters(1.0), 10.0, Color.kLightBlue));
+  // Elevator viz
+  private  static final Link2d elevatorFrameViz =
+      robotViz.addLink(
+          new Link2d(
+              robotViz,
+              "Elevator Base",
+              Constants.Viz.elevatorBaseLength,
+              4.0,
+              Color.kGreen,
+              new Transform2d(
+                  Constants.Viz.elevatorBaseX,
+                  Constants.Viz.elevatorBaseY,
+                  Constants.Viz.elevatorAngle)));
+  private static  final Link2d elevatorCarriageViz =
+      elevatorFrameViz.addLink(
+          new Link2d(
+              robotViz,
+              "Elevator Carriage",
+              Constants.Viz.elevatorCarriageLength,
+              6.0,
+              Color.kLightGreen));
 
+// Intake viz
+// private static final Link2d intakeArmViz =
+// robotViz.addLink(
+//     new Link2d(robotViz, "Intake Arm", Constants.Viz.intakeArmLength, 10.0, Color.kBlue));
+// private static final Link2d intakeRollerViz =
+// intakeArmViz.addLink(
+//     new Link2d(robotViz, "Intake Roller", Units.inchesToMeters(1.0), 10.0, Color.kLightBlue));
 
-// private static final Link2d ArmArmViz =
-// elevatorCarriageViz.addLink(
-//         new Link2d(robotViz, "Arm Arm", Constants.Viz.ArmArmLength, 10, Color.kRed));
-// private static final Link2d ArmWristViz =
-// ArmArmViz.addLink(
-//         new Link2d(robotViz, "Arm Wrist", Constants.Viz.ArmWristLength, 10, Color.kOrange));
-// private static final Link2d ArmWheelViz =
-// ArmWristViz.addLink(
-//         new Link2d(robotViz, "Arm Wheel", Units.inchesToMeters(2.0), 10, Color.kCoral));
-
-
-//  m_ArmArmViz.setRelativeTransform(
-//         new Transform2d(
-//             Constants.Viz.ArmArmPivotX,
-//             0,
-//             Rotation2d.fromRadians(m_armSim.getAngleRads() + Units.degreesToRadians(- Constants.Viz.elevatorAngle.getDegrees()))));
-
-//     m_ArmWristViz.setRelativeTransform(
-//       new Transform2d(
-//           Constants.Viz.ArmArmLength,
-//           0.0,
-//           Rotation2d.fromRadians(
-//             //m_ArmWristViz.getRelativeTransform().getRotation().getRadians()
-//                   + m_wrstSim.getAngleRads()+ Units.degreesToRadians(- Constants.Viz.elevatorAngle.getDegrees()) - Units.degreesToRadians(90))));
-
-//     m_ArmRollerViz.setRelativeTransform(
-//         new Transform2d(
-//             Constants.Viz.ArmWristLength,
-//             0.0,
-//             Rotation2d.fromRadians(
-//                 m_ArmRollerViz.getRelativeTransform().getRotation().getRadians()
-//                     + m_rollerSim.getAngularVelocityRadPerSec()
-//                         * Constants.Viz.angularVelocityScalar)));
-
-
-//         // Update arm viz.
 //     m_intakeArmViz.setRelativeTransform(
 //         new Transform2d(
 //             Constants.Viz.intakePivotX,
@@ -110,18 +74,49 @@ public class Visualization {
 //                     + m_rollerSim.getAngularVelocityRadPerSec()
 //                         * Constants.Viz.angularVelocityScalar)));
 
-    
-//     // Update carriage viz.
-//     m_elevatorCarriageViz.setRelativeTransform(
-//         new Transform2d(m_elevatorSim.getPositionMeters(), 0.0, new Rotation2d()));
+
+private static final Link2d ArmArmViz =
+elevatorCarriageViz.addLink(
+        new Link2d(robotViz, "Arm Arm", Constants.Viz.ArmArmLength, 10, Color.kRed));
+private static final Link2d ArmWristViz =
+ArmArmViz.addLink(
+        new Link2d(robotViz, "Arm Wrist", Constants.Viz.ArmWristLength, 10, Color.kOrange));
+private static final Link2d ArmWheelViz =
+ArmWristViz.addLink(
+        new Link2d(robotViz, "Arm Wheel", Units.inchesToMeters(2.0), 10, Color.kCoral));
 
 
-//     public void Update2DVisualization() {
 
 
 
-        
-//     }
+public static void Update2DVisualization() {
+
+        elevatorCarriageViz.setRelativeTransform(
+            new Transform2d(RobotContainer.elevator.getHeight(), 0.0, new Rotation2d()));
+
+         ArmArmViz.setRelativeTransform(
+        new Transform2d(
+            Constants.Viz.ArmArmPivotX,
+            0,
+            Rotation2d.fromRadians(Units.degreesToRadians(RobotContainer.arm.getArmAngle()) + Units.degreesToRadians(- Constants.Viz.elevatorAngle.getDegrees()))));
+
+    ArmWristViz.setRelativeTransform(
+      new Transform2d(
+          Constants.Viz.ArmArmLength,
+          0.0,
+          Rotation2d.fromRadians(
+            //m_ArmWristViz.getRelativeTransform().getRotation().getRadians()
+                  + Units.degreesToRadians(RobotContainer.arm.getWristAngle()+90)+ Units.degreesToRadians(- Constants.Viz.elevatorAngle.getDegrees()) - Units.degreesToRadians(90))));
+
+    ArmWheelViz.setRelativeTransform(
+        new Transform2d(
+            Constants.Viz.ArmWristLength,
+            0.0,
+            Rotation2d.fromRadians(
+                ArmWheelViz.getRelativeTransform().getRotation().getRadians()
+                    + RobotContainer.arm.RollerTargetVelocity)));
+
+    }
 
 
 

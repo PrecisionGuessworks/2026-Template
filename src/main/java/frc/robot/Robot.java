@@ -214,6 +214,7 @@ vision.simulationPeriodic(pose);
 
 var debugField = vision.getSimDebugField();
 debugField.getObject("EstimatedRobot").setPose(pose);
+Visualization.Update2DVisualization();
 
 
   }
