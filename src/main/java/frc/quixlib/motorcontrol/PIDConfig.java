@@ -7,15 +7,15 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 
 public class PIDConfig {
   // This matches CTRE configs
-  public final double kP;
-  public final double kI;
-  public final double kD;
-  public final double kS;
-  public final double kV;
-  public final double kA;
-  public final double kG;
-  public final GravityTypeValue GravityType;
-
+  public double kP;
+  public double kI;
+  public double kD;
+  public double kS;
+  public double kV;
+  public double kA;
+  public double kG;
+  public GravityTypeValue GravityType;
+  
   public PIDConfig() {
     this(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, GravityTypeValue.Elevator_Static);
   }

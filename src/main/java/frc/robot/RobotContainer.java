@@ -3,15 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.Constants.Drive.DRotation;
-import static frc.robot.Constants.Drive.DriveDeadband;
-import static frc.robot.Constants.Drive.IRotation;
-import static frc.robot.Constants.Drive.MaxAngularRatePercentage;
-import static frc.robot.Constants.Drive.MaxSpeedPercentage;
-import static frc.robot.Constants.Drive.PRotation;
-import static frc.robot.Constants.Drive.RotationDeadband;
-import static frc.robot.Constants.Drive.SnapDriveDeadband;
-import static frc.robot.Constants.Drive.SnapRotationDeadband;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,31 +50,27 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 
 public class RobotContainer {
-    public static double MaxSpeed = MaxSpeedPercentage*(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
-    public static double MaxAngularRate = RotationsPerSecond.of(MaxAngularRatePercentage).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double MaxSpeed = Constants.Drive.MaxSpeedPercentage*(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
+    public static double MaxAngularRate = RotationsPerSecond.of(Constants.Drive.MaxAngularRatePercentage).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     public static final CommandXboxController driver = new CommandXboxController(0);
     public static final CommandXboxController operator = new CommandXboxController(1);
-
-    // private final Telemetry logger = new Telemetry(MaxSpeed);
 
     // public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain(TunerConstants.DrivetrainConstants,250, Constants.Vision.ODOM_STD_DEV, Constants.Vision.kSingleTagStdDevs, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     public static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * DriveDeadband).withRotationalDeadband(MaxAngularRate * RotationDeadband)
+            .withDeadband(MaxSpeed * Constants.Drive.DriveDeadband).withRotationalDeadband(MaxAngularRate * Constants.Drive.RotationDeadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
     public static final SwerveRequest.FieldCentric driveAuto = new SwerveRequest.FieldCentric()
-            .withDeadband(SnapDriveDeadband).withRotationalDeadband(SnapRotationDeadband)
+            .withDeadband(Constants.Drive.SnapDriveDeadband).withRotationalDeadband(Constants.Drive.SnapRotationDeadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    // private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
-    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
 
     public final SwerveRequest.FieldCentricFacingAngle angle = new SwerveRequest.FieldCentricFacingAngle()
-        .withDeadband(MaxSpeed * SnapRotationDeadband).withRotationalDeadband(MaxAngularRate * SnapRotationDeadband) // Add a deadband
+        .withDeadband(MaxSpeed * Constants.Drive.SnapRotationDeadband).withRotationalDeadband(MaxAngularRate * Constants.Drive.SnapRotationDeadband) // Add a deadband
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors 
          //  .withSteerRequestType(SteerRequestType.MotionMagicExpo); // Use motion magic control for steer motors
 
@@ -92,15 +80,15 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
 
-Map<String, Command> robotCommands  = new HashMap<String, Command>();
+    Map<String, Command> robotCommands  = new HashMap<String, Command>();
 
 
 
 
 
-        public static final ElevatorSubsystem elevator = new ElevatorSubsystem();
-        //public static final IntakeSubsystem intake = new IntakeSubsystem();
-        public static final ArmSubsystem arm = new ArmSubsystem();
+    public static final ElevatorSubsystem elevator = new ElevatorSubsystem();
+    //cpublic static final IntakeSubsystem intake = new IntakeSubsystem();
+    public static final ArmSubsystem arm = new ArmSubsystem();
 
 
 
@@ -114,7 +102,7 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
         // DriverStation.startDataLog(DataLogManager.getLog());
 
         DogLog.setOptions(new DogLogOptions().withNtPublish(Constants.DogLogNetworkTables));
-        DogLog.setOptions(new DogLogOptions().withNtTunables(Constants.DogLogNetworkTables));
+        // DogLog.setOptions(new DogLogOptions().withNtTunables(Constants.DogLogNetworkTables));
         DogLog.setOptions(new DogLogOptions().withCaptureDs(Constants.DogLogNetworkTables));
         DogLog.setOptions(new DogLogOptions().withCaptureConsole(true));
         DogLog.setOptions(new DogLogOptions().withLogExtras(true));
@@ -132,10 +120,9 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
 
 
 
-
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto", autoChooser);
-        angle.HeadingController.setPID( PRotation,  IRotation , DRotation);
+        angle.HeadingController.setPID( Constants.Drive.PRotation,  Constants.Drive.IRotation , Constants.Drive.DRotation);
         configureBindings();
 
     
@@ -148,13 +135,12 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
           builder.addDoubleProperty("Value", () -> drivetrain.getPigeon2().getYaw().getValueAsDouble(), null);
         });
          // SmartDashboard.putNumber("Time",Timer.getMatchTime());
-          SmartDashboard.putNumber("Time",DriverStation.getMatchTime());
-          if(Constants.ExtraInfo){
-          SmartDashboard.putNumber("Voltage",RobotController.getBatteryVoltage());
-          SmartDashboard.putNumber("CAN",RobotController.getCANStatus().percentBusUtilization * 100.0);
-          SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+        SmartDashboard.putNumber("Time",DriverStation.getMatchTime());
+        SmartDashboard.putNumber("Voltage",RobotController.getBatteryVoltage());
+        SmartDashboard.putNumber("CAN",RobotController.getCANStatus().percentBusUtilization * 100.0);
+        SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
         DogLog.setPdh(powerDistribution);
-          }
+          
 
         //PathfindingCommand.warmupCommand().ignoringDisable(true).schedule();;
         
@@ -212,13 +198,6 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
 
 
        operator.y().whileTrue(new CoralEleUp(elevator));
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a - single log.
-        // driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // driver.back().and(driver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        
 
         operator.rightBumper().whileTrue(new StowArm(elevator, arm));
         operator.start().whileTrue(drivetrain.applyRequest(() ->
@@ -227,8 +206,6 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
             .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
     ));
 
-
-        //drivetrain.registerTelemetry(logger::telemeterize);
     }
 
 
@@ -236,7 +213,7 @@ Map<String, Command> robotCommands  = new HashMap<String, Command>();
 
 
     public Command getAutonomousCommand() {
-        /* First put the drivetrain into auto run mode, then run the auto */
+       
         return autoChooser.getSelected();
     }
 

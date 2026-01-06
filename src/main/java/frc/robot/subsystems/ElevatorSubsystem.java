@@ -172,21 +172,13 @@ public boolean getElevatorOn(){
     
     SmartDashboard.putBoolean(
           "Elevator", !m_ElevatorOff);
-      DogLog.log("Elevator: On", !m_ElevatorOff);
+    DogLog.log("Elevator: On", !m_ElevatorOff);
           
-      if(Constants.ExtraInfo){
-    // SmartDashboard.putNumber(
-    //     "Elevator: Current Height (in)", Units.metersToInches(getHeight()));
     DogLog.log("Elevator: Height", Units.metersToInches(getHeight()),"Inch");
-    // SmartDashboard.putNumber(
-    //     "Elevator: Target Height (in)", Units.metersToInches(Constants.Elevator.motorRatio.sensorRadiansToMechanismPosition(m_motor.getClosedLoopReference())));
     DogLog.log("Elevator: Target Height", Units.metersToInches(Constants.Elevator.motorRatio.sensorRadiansToMechanismPosition(m_motor.getClosedLoopReference())),"Inchs");
-        // SmartDashboard.putNumber(
-        //   "Elevator: Target set Height (in)",
-        //   Units.metersToInches(m_targetHeight)); 
     DogLog.log("Elevator: Target set Height", Units.metersToInches(m_targetHeight),"In");
     
-      }
+
     SmartDashboard.putBoolean(
           "L1", Loc1);
     SmartDashboard.putBoolean(
@@ -195,10 +187,16 @@ public boolean getElevatorOn(){
           "L3", Loc3);    
     SmartDashboard.putBoolean(
           "L4", Loc4);
-          if(Constants.ExtraInfo){
+
+    DogLog.log("Elevator: L1", Loc1);
+    DogLog.log("Elevator: L2", Loc2);
+    DogLog.log("Elevator: L3", Loc3);
+    DogLog.log("Elevator: L4", Loc4);
+
     m_motor.logMotorState();
+    // m_motor.updateTunerConstants0();
     m_follower.logMotorState();
-          }
+
   }
 
   // --- BEGIN STUFF FOR SIMULATION ---

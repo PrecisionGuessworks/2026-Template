@@ -39,9 +39,7 @@ public class Constants {
 
     public static final double g = 9.81; 
     public static final double defaultPeriodSecs = 0.02; 
-    public static boolean isSim =  false;// edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
-    public static boolean ExtraInfo = true; // Turn on Extra network info, Just leave as true unless network is overloaded.
-
+    public static final boolean isSim =  false;// edu.wpi.first.wpilibj.RobotBase.isSimulation(); // Uses diffrent constants if sim or real
     public static final boolean DogLogEnabled = true; // Set to true to enable DogLog telemetry
     public static final boolean DogLogNetworkTables = true; // Set to true to enable DogLog over NetworkTables
 

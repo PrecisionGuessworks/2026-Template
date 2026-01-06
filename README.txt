@@ -10,7 +10,8 @@ TODO:
         This will add logging of robot, tuneable values, and unit support
         Note: It will publish to NT but not on a field with fms. That stuff should be still done with smartdashboard. TEST IN SIM BEFORE COMP!!!
         - DogLog.time(key,Command) not working on second run. Might just have to log this by hand or make my own.
-
+        - set up tuneable values. Need to fix to not make when there is fms
+        
 - PathPlanner is not in vendep but in java folder sooo yeah
 
 ------------------------------- Controller Layouts --------------------------------------

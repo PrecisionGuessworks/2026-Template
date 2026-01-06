@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.quixlib.devices.QuixCANCoder;
 import frc.quixlib.motorcontrol.QuixTalonFX;
-import frc.quixlib.viz.Link2d;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
@@ -241,28 +240,8 @@ private final QuixTalonFX m_wristMotor =
       m_wristMotor.setMotionMagicPositionSetpointExpo(
         Constants.Arm.wristPositionPIDSlot, m_wristTargetAngle);
    // }
-  if(Constants.ExtraInfo){
-    // SmartDashboard.putNumber(
-    //     "Arm: Current Angle (deg)", Units.radiansToDegrees(m_armMotor.getSensorPosition()));
-    // SmartDashboard.putNumber(
-    //     "Arm: Current CANcoder Angle (deg)", getArmCoder());
-    // SmartDashboard.putNumber(
-    //     "Arm: Real Current Angle (deg)", getArmAngle());
-    // SmartDashboard.putNumber(
-    //     "Arm: Target Angle (deg)",
-    //     Units.radiansToDegrees(m_armMotor.getClosedLoopReference()));
-    // SmartDashboard.putNumber(
-    //     "Arm: Target set Angle (deg)",
-    //     Units.radiansToDegrees(m_armTargetAngle));
-    // SmartDashboard.putNumber(
-    //     "Arm: Current Velocity (deg per sec)",
-    //     Units.radiansToDegrees(m_armMotor.getSensorVelocity()));
-    // SmartDashboard.putNumber(
-    //     "Arm: Target Velocity (deg per sec)",
-    //     Units.radiansToDegrees(m_armMotor.getClosedLoopReferenceSlope()));
-    // SmartDashboard.putNumber(
-    //     "Arm: Current Roller Velocity (rad per sec)", m_rollerMotor.getSensorVelocity());
     
+    //  Logging
     DogLog.log("Arm: Current Angle (deg)", Units.radiansToDegrees(m_armMotor.getSensorPosition()),"deg");
     DogLog.log("Arm: Current CANcoder Angle (deg)", getArmCoder(),"deg");
     DogLog.log("Arm: Real Current Angle (deg)", getArmAngle(),"deg");
@@ -270,39 +249,19 @@ private final QuixTalonFX m_wristMotor =
     DogLog.log("Arm: Target set Angle (deg)", Units.radiansToDegrees(m_armTargetAngle),"deg");
     DogLog.log("Arm: Current Velocity (deg per sec)", Units.radiansToDegrees(m_armMotor.getSensorVelocity()),"deg per sec");
 
-      // SmartDashboard.putNumber(
-      //   "Wrist: Current Angle (deg)", Units.radiansToDegrees(m_wristMotor.getSensorPosition()));
-      //   SmartDashboard.putNumber(
-      //   "Wrist: Real Current Angle (deg)", getWristAngle());
-      // SmartDashboard.putNumber(
-      //   "Wrist: Target Angle (deg)",
-      //   Units.radiansToDegrees(m_wristMotor.getClosedLoopReference()));
-      // SmartDashboard.putNumber(
-      //   "Wrist: Current Velocity (deg per sec)",
-      //   Units.radiansToDegrees(m_wristMotor.getSensorVelocity()));
-      // SmartDashboard.putNumber(
-      //   "Wrist: Target Velocity (deg per sec)",
-      //   Units.radiansToDegrees(m_wristMotor.getClosedLoopReferenceSlope()));
-      // SmartDashboard.putNumber(
-      //   "Wrist: Current Roller Velocity (rad per sec)", m_rollerMotor.getSensorVelocity());
-      //   SmartDashboard.putNumber(
-      //   "Wrist: Target set Angle (deg)",
-      //   Units.radiansToDegrees(m_wristTargetAngle));
-
     DogLog.log("Wrist: Current Angle (deg)", Units.radiansToDegrees(m_wristMotor.getSensorPosition()),"deg");
     DogLog.log("Wrist: Real Current Angle (deg)", getWristAngle(),"deg");
     DogLog.log("Wrist: Target Angle (deg)", Units.radiansToDegrees(m_wristMotor.getClosedLoopReference()),"deg");
     DogLog.log("Wrist: Target set Angle (deg)", Units.radiansToDegrees(m_wristTargetAngle),"deg");
     DogLog.log("Wrist: Current Velocity (deg per sec)", Units.radiansToDegrees(m_wristMotor.getSensorVelocity()),"deg per sec");
     DogLog.log("Wrist: Target Velocity (deg per sec)", Units.radiansToDegrees(m_wristMotor.getClosedLoopReferenceSlope()),"deg per sec");
-  }
 
-  if(Constants.ExtraInfo){
     m_rollerMotor.logMotorState();
     m_wristMotor.logMotorState();
     m_armMotor.logMotorState();
     m_armCoder.logSensorState();
-  }
+  
+
   }
 
   // --- BEGIN STUFF FOR SIMULATION ---
