@@ -12,6 +12,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
+import dev.doglog.internal.TimedCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.generated.TimedCommand2;
 
 public class DrivetrainExtra {
     private static Optional<Alliance> m_ally = DriverStation.getAlliance();
@@ -67,6 +69,10 @@ public class DrivetrainExtra {
         Pose2d targetpose = new Pose2d(16.7,5.5,new Rotation2d(0));
         // Pose2d targetpose = Constants.ShotCalc.targetpose;
         return pose.getTranslation().getDistance(targetpose.getTranslation());
+    }
+
+    public static Command LogTime(String key, Command command){
+        return new TimedCommand2(command, key);
     }
 
 

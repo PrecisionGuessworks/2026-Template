@@ -4,34 +4,26 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DataLogManager;
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.quixlib.viz.Link2d;
-import frc.quixlib.viz.Viz2d;
 import frc.robot.commands.CoralEleUp;
 import frc.robot.commands.CoralMoveScore;
 import frc.robot.commands.CoralMoveStow;
@@ -39,15 +31,11 @@ import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.Moveup;
 import frc.robot.commands.MoveupArm;
 import frc.robot.commands.StowArm;
-import frc.robot.generated.Telemetry;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DrivetrainExtra;
 import frc.robot.subsystems.ElevatorSubsystem;
-
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
 
 public class RobotContainer {
     public static double MaxSpeed = Constants.Drive.MaxSpeedPercentage*(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)); // kSpeedAt12Volts desired top speed
@@ -102,7 +90,7 @@ public class RobotContainer {
         // DriverStation.startDataLog(DataLogManager.getLog());
 
         DogLog.setOptions(new DogLogOptions().withNtPublish(Constants.DogLogNetworkTables));
-        // DogLog.setOptions(new DogLogOptions().withNtTunables(Constants.DogLogNetworkTables));
+        DogLog.setOptions(new DogLogOptions().withNtTunables(Constants.DogLogNetworkTables));
         DogLog.setOptions(new DogLogOptions().withCaptureDs(Constants.DogLogNetworkTables));
         DogLog.setOptions(new DogLogOptions().withCaptureConsole(true));
         DogLog.setOptions(new DogLogOptions().withLogExtras(true));
@@ -193,7 +181,7 @@ public class RobotContainer {
        // driver.a().whileTrue(new AlgeaWack(elevator, arm));
        
        driver.a().whileTrue(new MoveupArm(1,elevator,arm)); 
-       driver.b().whileTrue(new MoveupArm(2,elevator,arm)); 
+       driver.b().whileTrue(DrivetrainExtra.LogTime("test", new MoveupArm(2,elevator,arm))); 
        driver.y().whileTrue(new Moveup(elevator));
 
 

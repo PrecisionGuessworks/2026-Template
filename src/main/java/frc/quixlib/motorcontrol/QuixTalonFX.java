@@ -1,6 +1,5 @@
 package frc.quixlib.motorcontrol;
 
-
 import java.util.function.Function;
 
 import com.ctre.phoenix6.StatusCode;
@@ -307,7 +306,7 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
     m_controller.hasResetOccurred();
 
     // SmartDashboard.putBoolean("TalonFX Configuration " + m_canID.toString(), );
-    DogLog.log("Hardware: TalonFX " + m_canID.deviceNumber + ": Configuration",setConfiguration());
+    DogLog.log("Hardware: "+m_controller.getDescription()+" ID " + m_canID.deviceNumber + ": Configuration",setConfiguration());
     String name = m_controller.getDescription()+" ID: " + m_canID.deviceNumber +" ";
 
 
@@ -486,15 +485,15 @@ public class QuixTalonFX implements QuixMotorControllerWithEncoder, AutoCloseabl
     // m_rawRotorPositionPublisher.set(m_controller.getRotorPosition().getValueAsDouble());
     // m_sensorPositionPublisher.set(getSensorPosition());
     // m_sensorVelocityPublisher.set(getSensorVelocity());
-    String name = m_controller.getDescription();
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Percent Output", getPercentOutput());
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Supply Current", getSupplyCurrent(),"Amps");
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Stator Current", getStatorCurrent(),"Amps");
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Closed Loop Reference", getClosedLoopReference(),"Rad");
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Closed Loop Reference Slope", getClosedLoopReferenceSlope(),"rad per sec");
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Raw Rotor Position", m_controller.getRotorPosition().getValueAsDouble(),"Radi");
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Sensor Position", getSensorPosition(),"rad");
-    DogLog.log("Hardware: "+name+" ID" + m_canID.deviceNumber + ": Sensor Velocity", getSensorVelocity(),"rad per sec");
+    String name = "Hardware: "+m_controller.getDescription()+" ID " + m_canID.deviceNumber;
+    DogLog.log(name+ ": Percent Output", getPercentOutput());
+    DogLog.log(name + ": Supply Current", getSupplyCurrent(),"Amps");
+    DogLog.log(name + ": Stator Current", getStatorCurrent(),"Amps");
+    DogLog.log(name + ": Closed Loop Reference", getClosedLoopReference(),"Rad");
+    DogLog.log(name + ": Closed Loop Reference Slope", getClosedLoopReferenceSlope(),"rad per sec");
+    DogLog.log(name + ": Raw Rotor Position", m_controller.getRotorPosition().getValueAsDouble(),"Radi");
+    DogLog.log(name + ": Sensor Position", getSensorPosition(),"rad");
+    DogLog.log(name + ": Sensor Velocity", getSensorVelocity(),"rad per sec");
     if (!DriverStation.isFMSAttached()){
     updateTunerConstants0();
     }
