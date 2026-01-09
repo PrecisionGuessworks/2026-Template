@@ -42,3 +42,5 @@ D-Pad:
 Left Back Button:
 Right Back Button:
 
+Rumble:
+

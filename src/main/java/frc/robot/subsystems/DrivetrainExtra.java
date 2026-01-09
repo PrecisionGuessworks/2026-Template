@@ -37,6 +37,22 @@ public class DrivetrainExtra {
         return RobotContainer.drivetrain.getState().Speeds.vxMetersPerSecond * Math.cos(RobotContainer.drivetrain.getState().Pose.getRotation().getRadians()) - RobotContainer.drivetrain.getState().Speeds.vyMetersPerSecond * Math.sin(RobotContainer.drivetrain.getState().Pose.getRotation().getRadians());
     }
 
+    // Might need to be swapped idk.
+    public static double getRobotAccelX(){
+        return RobotContainer.drivetrain.getPigeon2().getAccelerationX().getValueAsDouble();
+    }
+    public static double getRobotAccelY(){
+        return RobotContainer.drivetrain.getPigeon2().getAccelerationY().getValueAsDouble();
+    }
+
+    public static double getFieldAccelY(){
+        return getRobotAccelX() * Math.sin(RobotContainer.drivetrain.getState().Pose.getRotation().getRadians()) + getRobotAccelY() * Math.cos(RobotContainer.drivetrain.getState().Pose.getRotation().getRadians());
+    }
+
+    public static double getFieldAccelX(){
+        return getRobotAccelX() * Math.cos(RobotContainer.drivetrain.getState().Pose.getRotation().getRadians()) - getRobotAccelY() * Math.sin(RobotContainer.drivetrain.getState().Pose.getRotation().getRadians());
+    }
+    
      public static Rotation2d targetangle() {
         /* First put the drivetrain into auto run mode, then run the auto */
         SwerveDriveState state = RobotContainer.drivetrain.getState();
