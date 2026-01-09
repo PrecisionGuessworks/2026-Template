@@ -262,6 +262,10 @@ public class Constants {
   }
 
   public static class Vision {
+
+    public static final String LimeLightCamerName = "FrontLimelight"; // Front
+    public static final Matrix<N3, N1> LLTagStdDevs = VecBuilder.fill(.5, .5, 9999999);
+    
     public static final String kCameraName = "FrontCamera"; // Front
     
     // Cam mounted facing forward, 13in forward of center, 7in up from center, up 20 degs.

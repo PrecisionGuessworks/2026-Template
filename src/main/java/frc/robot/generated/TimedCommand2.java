@@ -4,6 +4,10 @@ import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+
+// This class is similar to TimedCommand but fixes a bug and it allows for an optional key to be passed in for logging purposes.
+// If no key is passed in, the command's name is used as the key.
+
 public class TimedCommand2 extends Command {
   private final Command command;
   private final String key;
@@ -29,6 +33,7 @@ public class TimedCommand2 extends Command {
 
   @Override
   public void initialize() {
+    DogLog.log("Commands/" + key + "/.Running", true);
     DogLog.time("Commands/" + key + "/.initialize()");
     command.initialize();
     DogLog.timeEnd("Commands/" + key + "/.initialize()");
@@ -60,5 +65,6 @@ public class TimedCommand2 extends Command {
     DogLog.time(logKey);
     command.end(interrupted);
     DogLog.timeEnd(logKey);
+    DogLog.log("Commands/" + key + "/.Running", false);
   }
 }

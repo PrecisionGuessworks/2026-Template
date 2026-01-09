@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.Elastic;
+import frc.robot.generated.LimelightHelpers;
 import frc.robot.generated.Vision;
 import frc.robot.subsystems.Visualization;
 
@@ -46,8 +51,8 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     vision = new Vision();
-
-    
+    SignalLogger.enableAutoLogging(false); // Disable CTRE Signal Logger auto logging
+    LimelightHelpers.SetIMUMode(Constants.Vision.LimeLightCamerName, 1);
         
   }
 
@@ -61,11 +66,28 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     Visualization.Update3DVisualization();
 
- 
+    // OLD LL vision code
     // var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
     // if (llMeasurement != null) {
     //  RobotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
     // }
+
+    // First, tell Limelight your robot's current orientation
+      double robotYaw = RobotContainer.drivetrain.getState().Pose.getRotation().getDegrees(); // CHECK !!!  
+      LimelightHelpers.SetRobotOrientation(Constants.Vision.LimeLightCamerName, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+      
+      // Get the pose estimate
+      LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimeLightCamerName);
+
+      // Add it to your pose estimator
+      RobotContainer.drivetrain.setVisionMeasurementStdDevs(Constants.Vision.LLTagStdDevs);
+      if (limelightMeasurement != null){
+      RobotContainer.drivetrain.addVisionMeasurement(
+          limelightMeasurement.pose,
+          limelightMeasurement.timestampSeconds
+      );
+  }
+
 
     try{
       var visionEst = vision.getEstimatedGlobalPose();
@@ -152,6 +174,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    LimelightHelpers.SetIMUMode(Constants.Vision.LimeLightCamerName, 2);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     autoName = "";
     if (m_autonomousCommand != null) {
@@ -170,6 +193,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    LimelightHelpers.SetIMUMode(Constants.Vision.LimeLightCamerName, 2);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -265,4 +289,5 @@ Visualization.Update2DVisualization();
     m_field.setRobotPose(pose);
     SmartDashboard.putData(m_field);
   }
+
 }

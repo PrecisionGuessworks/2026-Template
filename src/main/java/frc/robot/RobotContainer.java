@@ -100,7 +100,7 @@ public class RobotContainer {
         robotCommands.put("CoralMoveScore", new CoralMoveScore(elevator, arm));
         robotCommands.put("CoralMoveStow", new CoralMoveStow(elevator, arm));
         robotCommands.put("IntakeCoral", new IntakeCoral(elevator, arm));
-        robotCommands.put("StowArm", new StowArm(elevator, arm));
+        robotCommands.put("StowArm", DrivetrainExtra.LogTime("StowArm", new StowArm(elevator, arm)));
         robotCommands.put("L4", Commands.runOnce(() -> RobotContainer.elevator.setHeightLocation(4)));
 
     
